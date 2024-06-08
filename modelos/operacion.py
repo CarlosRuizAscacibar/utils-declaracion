@@ -8,7 +8,7 @@ from modelos.base_model import BaseModel
 class Operacion():
     def __init__(self,
                  id: str,
-                 fecha: str,
+                 fecha: date,
                  isin: str,
                  tipo: TipoOperacion = None,
                  cantidad: int = None,
