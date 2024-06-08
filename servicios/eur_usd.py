@@ -3,8 +3,10 @@ import requests
 import re
 from datetime import datetime
 from decimal import Decimal
+from datetime import datetime, timedelta
+
 # %%
-def fetch_usd_eur_quote():
+def fetch_usd_eur_quote(year):
     res = requests.get('https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/usd.xml')
 
     raw_xml = res.text
@@ -25,6 +27,21 @@ def fetch_usd_eur_quote():
                 dic[date.strftime("%Y-%m-%d")] =  Decimal(obs_value)
             else:
                 raise Exception(f"no match for {x}")
-    dic['2023-12-26']=Decimal('1.1044')
+
+    
+    current_date = datetime(year, 1, 1)
+    end_date = datetime(year, 12, 31)
+
+     
+    dic['2023-01-01']=Decimal('1.0667')
+    dic['2023-12-31']=Decimal('1.1056')
+
+    while current_date <= end_date:
+        if current_date.strftime("%Y-%m-%d") not in dic.keys():
+            yesterday = current_date - timedelta(days=1)
+            dic[current_date.strftime("%Y-%m-%d")] = dic[yesterday.strftime("%Y-%m-%d")]
+        current_date += timedelta(days=1)
+    
+    
     return dic
     # %%
