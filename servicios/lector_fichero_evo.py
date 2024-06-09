@@ -16,7 +16,6 @@ def leer_excel_evo_y_mapear_objetos(ruta_archivo,broker):
         operacion = _parse_operacion(operacion_str)
         fecha_operacion = parse_evo_date(fecha_operacion_str)
         operacion = Operacion(
-            id=gen_id(),
             fecha=fecha_operacion, 
             isin=isin, 
             tipo=operacion, 
@@ -25,7 +24,8 @@ def leer_excel_evo_y_mapear_objetos(ruta_archivo,broker):
             divisa=divisa, 
             nombre=valor, 
             importe_neto=Decimal(importe_neto), 
-            broker=broker
+            broker=broker,
+            restantes=títulos_nominal
         )
         operaciones.append(operacion)
     

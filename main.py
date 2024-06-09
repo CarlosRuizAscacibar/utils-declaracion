@@ -31,7 +31,7 @@ compra_ventas = sorted(compra_ventas, key=lambda x: x.venta.fecha.isoformat())
 # %%
 from servicios.compraventa_to_report import compraventa_to_report
 from servicios.eur_usd import fetch_usd_eur_quote
-dic_eur_price = fetch_usd_eur_quote()
+dic_eur_price = fetch_usd_eur_quote(2023)
 report = []
 for x in compra_ventas:
     x_to_report = compraventa_to_report(x)
@@ -45,4 +45,3 @@ for x in compra_ventas:
 
 # %%
 pd.DataFrame(report).to_excel(os.getenv('MOVEMENTS_RESULT'))
-# %%

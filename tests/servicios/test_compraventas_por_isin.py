@@ -7,9 +7,9 @@ import json
 
 class TestCompraVentasPorIsin(unittest.TestCase):
     def test_operaciones_por_isin(self):
-        op1 = Operacion(id="op1",fecha=datetime.strptime('01-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=1,precio_unitario=1,tipo=TipoOperacion.COMPRA)
-        op2 = Operacion(id="op2",fecha=datetime.strptime('04-01-2020', '%d-%m-%Y'),isin='ISIN2',cantidad=1,precio_unitario=1,tipo=TipoOperacion.VENTA)
-        op3 = Operacion(id="op3",fecha=datetime.strptime('03-01-2020', '%d-%m-%Y'),isin='ISIN2',cantidad=1,precio_unitario=1,tipo=TipoOperacion.COMPRA)
+        op1 = Operacion(fecha=datetime.strptime('01-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=1,precio_unitario=1,tipo=TipoOperacion.COMPRA, restantes=1)
+        op2 = Operacion(fecha=datetime.strptime('04-01-2020', '%d-%m-%Y'),isin='ISIN2',cantidad=1,precio_unitario=1,tipo=TipoOperacion.VENTA, restantes=1)
+        op3 = Operacion(fecha=datetime.strptime('03-01-2020', '%d-%m-%Y'),isin='ISIN2',cantidad=1,precio_unitario=1,tipo=TipoOperacion.COMPRA, restantes=1)
         operaciones = [op1,op2,op3]
 
         dic_isin = agrupar_por_isin(operaciones)
@@ -18,9 +18,9 @@ class TestCompraVentasPorIsin(unittest.TestCase):
         self.assertEqual(len(dic_isin['ISIN2']),2)
     
     def test_operaciones_por_isin_1_compra_varias_ventas(self):
-        op1 = Operacion(id="op1",fecha=datetime.strptime('01-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=2,precio_unitario=1,tipo=TipoOperacion.COMPRA)
-        op2 = Operacion(id="op2",fecha=datetime.strptime('04-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=1,precio_unitario=2,tipo=TipoOperacion.VENTA)
-        op3 = Operacion(id="op3",fecha=datetime.strptime('03-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=1,precio_unitario=3,tipo=TipoOperacion.VENTA)
+        op1 = Operacion(fecha=datetime.strptime('01-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=2,precio_unitario=1,tipo=TipoOperacion.COMPRA, restantes=2)
+        op2 = Operacion(fecha=datetime.strptime('04-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=1,precio_unitario=2,tipo=TipoOperacion.VENTA, restantes=1)
+        op3 = Operacion(fecha=datetime.strptime('03-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=1,precio_unitario=3,tipo=TipoOperacion.VENTA, restantes=1)
         operaciones = [op1,op2,op3]
 
         dic_isin = operaciones_por_isin(operaciones)
@@ -31,9 +31,9 @@ class TestCompraVentasPorIsin(unittest.TestCase):
         self.assertEqual(dic_isin[1].venta,op2)
     
     def test_operaciones_por_isin_varias_compras_una_ventas(self):
-        op1 = Operacion(id="op1",fecha=datetime.strptime('01-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=2,precio_unitario=1,tipo=TipoOperacion.COMPRA)
-        op2 = Operacion(id="op2",fecha=datetime.strptime('03-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=3,precio_unitario=3,tipo=TipoOperacion.COMPRA)
-        op3 = Operacion(id="op3",fecha=datetime.strptime('04-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=5,precio_unitario=2,tipo=TipoOperacion.VENTA)
+        op1 = Operacion(fecha=datetime.strptime('01-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=2,precio_unitario=1,tipo=TipoOperacion.COMPRA, restantes=2)
+        op2 = Operacion(fecha=datetime.strptime('03-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=3,precio_unitario=3,tipo=TipoOperacion.COMPRA, restantes=3)
+        op3 = Operacion(fecha=datetime.strptime('04-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=5,precio_unitario=2,tipo=TipoOperacion.VENTA, restantes=5)
         operaciones = [op1,op2,op3]
 
         dic_isin = operaciones_por_isin(operaciones)
