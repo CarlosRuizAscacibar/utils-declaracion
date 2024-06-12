@@ -8,7 +8,8 @@ class MovimientoCorriente(BaseModel):
                     importe: Decimal,
                     fecha_contable: date,
                     fecha_valor: date,
-                    banco:str
+                    banco:str,
+                    saldo:Decimal
                 ):
         self.id: str=id
         self.concepto: str = concepto
@@ -16,4 +17,5 @@ class MovimientoCorriente(BaseModel):
         self.fecha_contable: date = fecha_contable
         self.fecha_valor: date = fecha_valor
         self.banco: str = banco
+        self.saldo: Decimal = saldo
 

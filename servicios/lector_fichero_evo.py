@@ -4,7 +4,7 @@ from modelos.broker import BrokerEnum
 from decimal import Decimal
 from modelos.tipo_operacion import TipoOperacion
 from datetime import date, datetime
-from servicios.id_generator import gen_id
+from servicios.id_generator import gen_id, gen_id_operacion
 def leer_excel_evo_y_mapear_objetos(ruta_archivo,broker):
     libro = load_workbook(filename=ruta_archivo, data_only=True)
     hoja = libro.active
@@ -20,13 +20,14 @@ def leer_excel_evo_y_mapear_objetos(ruta_archivo,broker):
             isin=isin, 
             tipo=operacion, 
             cantidad=títulos_nominal, 
-            precio_unitario=Decimal(precio_neto), 
+            precio_unitario=Decimal(precio_neto).quantize(Decimal('0.01')), 
             divisa=divisa, 
             nombre=valor, 
-            importe_neto=Decimal(importe_neto), 
+            importe_neto=Decimal(importe_neto).quantize(Decimal('0.01')), 
             broker=broker,
             restantes=títulos_nominal
         )
+        operacion.id = gen_id_operacion(op=operacion)
         operaciones.append(operacion)
     
     return operaciones

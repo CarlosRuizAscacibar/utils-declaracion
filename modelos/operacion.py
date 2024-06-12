@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Operacion():
+    id: str = None
     fecha: date = None
     isin: str = None
     tipo: TipoOperacion = None
