@@ -45,3 +45,40 @@ SELECT * FROM bank_movements bm WHERE concepto LIKE '%dividendo%'
 AND bm.fecha_contable LIKE '2023%';
 SELECT * FROM eur_usd ;
 DROP TABLE eur_usd;
+SELECT * FROM bank_movements bm  ;
+
+DROP VIEW operacion_forex_vinculada_movimiento;
+CREATE VIEW operacion_forex_vinculada_movimiento as
+SELECT o.fecha,o.nombre,o.importe_neto, o.id AS id_operacion, bm.id AS id_movimiento,
+bm.importe importe_banco, o.importe_neto / eu.value AS importe_estimado_euro,
+ABS( ABS(o.importe_neto / eu.value) - ABS(bm.importe)) AS diferencia_est_eur 
+FROM operacion o 
+JOIN bank_movements bm ON bm.fecha_contable = o.fecha 
+AND (
+	(bm.concepto LIKE '%COMPRA%' AND o.tipo LIKE '%COMPRA')
+	OR
+	(bm.concepto LIKE '%VENTA%' AND o.tipo LIKE '%VENTA')
+)
+JOIN eur_usd eu ON eu.str_time = bm.fecha_contable AND o.divisa = 'USD'
+WHERE ABS( ABS(o.importe_neto / eu.value) - ABS(bm.importe)) < 3
+AND o.divisa != 'EUR';
+
+SELECT o.fecha,o.nombre,o.importe_neto, o.id AS id_operacion, bm.id AS id_movimiento,
+bm.importe importe_banco, o.importe_neto / eu.value AS importe_estimado_euro,
+ABS( ABS(o.importe_neto / eu.value) - ABS(bm.importe)) AS diferencia_est_eur 
+FROM operacion o 
+JOIN bank_movements bm ON bm.fecha_contable = o.fecha 
+	AND bm.concepto LIKE '%VENTA%' AND o.tipo LIKE '%VENTA'
+JOIN eur_usd eu ON eu.str_time = bm.fecha_contable AND o.divisa = 'USD'
+WHERE ABS( (o.importe_neto / eu.value) - bm.importe) < 3
+AND o.divisa != 'EUR';
+
+SELECT * FROM operacion_forex_vinculada_movimiento 
+WHERE id_operacion LIKE '%VENTA%' AND fecha LIKE '%2023%';
+
+SELECT * FROM operacion o WHERE o.tipo LIKE '%COMPRA';
+
+SELECT * FROM bank_movements bm ;
+
+
+
