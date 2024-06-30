@@ -5,7 +5,6 @@ dotenv.load_dotenv()
 import os
 from decimal import Decimal
 from modelos.movimiento_corriente import MovimientoCorriente
-file_path = os.getenv('MOVIMIENTOS_MY_INVESTOR')
 from servicios.id_generator import gen_id_movimiento_corriente
 from servicios.validate_dataframe_to_load import validate_data_frame_to_load
 from servicios.persist_dataframe import persist_dataframe
@@ -35,7 +34,7 @@ def convert_row_to_movement(x):
     mov.id = gen_id_movimiento_corriente(mov)
     return mov
 
-def main():
+def process_file(file_path):
     df = pd.read_excel(file_path)
     df = process_raw_excel_dataframe(df)
     movs = []
@@ -50,4 +49,5 @@ def main():
     persist_dataframe(mov_df, constants.TableNames.BANK_MOVEMENT)
 
 if __name__ == '__main__':
-    main()
+    file_path = os.getenv('MOVIMIENTOS_MY_INVESTOR')
+    process_file(file_path)
