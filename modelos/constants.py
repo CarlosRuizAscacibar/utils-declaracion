@@ -14,6 +14,7 @@ class EnvironmentVariableNames:
 class BankNames:
     EVO="evo"
     MYINVESTOR="myinvestor"
+    SABADELL="sabadell"
 
 class BrokerNames:
     EVO="evo"
