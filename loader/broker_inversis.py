@@ -18,6 +18,7 @@ def load_inversis_broker_operations(file_path, bank):
     df['tipo'] = df['tipo'].astype('str')
     df['precio_unitario'] = df['precio_unitario'].astype('str')
     df['importe_neto'] = df['importe_neto'].astype('str')
+    print(f"Number of rows: {len(df)}")
     validate_data_frame_to_load(df)
-    df = remove_present_ids_in_database(df)
+    df = remove_present_ids_in_database(df, TableNames.OPERATION)
     persist_dataframe(df, TableNames.OPERATION)

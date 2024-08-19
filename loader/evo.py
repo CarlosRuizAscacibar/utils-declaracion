@@ -13,6 +13,7 @@ import modelos.constants as constants
 def process_file(file_path):
     movs = leer_excel_corriente_evo(file_path,constants.BankNames.EVO)
     df = pd.DataFrame.from_dict([json.loads(x.to_json()) for x in movs]).set_index('id')
+    print(f"Number of rows: {len(df)}")
     validate_data_frame_to_load(df)
     df = remove_present_ids_in_database(df,constants.TableNames.BANK_MOVEMENT)
     persist_dataframe(df,constants.TableNames.BANK_MOVEMENT)

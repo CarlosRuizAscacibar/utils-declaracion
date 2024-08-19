@@ -6,7 +6,7 @@ import os
 from decimal import Decimal
 from modelos.movimiento_corriente import MovimientoCorriente
 from servicios.id_generator import gen_id_movimiento_corriente
-from servicios.validate_dataframe_to_load import validate_data_frame_to_load
+from servicios.validate_dataframe_to_load import validate_data_frame_to_load, remove_present_ids_in_database
 from servicios.persist_dataframe import persist_dataframe
 import modelos.constants as constants
 
@@ -46,6 +46,7 @@ def process_file(file_path):
     mov_df['importe'] = mov_df['importe'].apply(str)
     mov_df['saldo'] = mov_df['saldo'].apply(str)
     validate_data_frame_to_load(mov_df)
+    mov_df = remove_present_ids_in_database(mov_df, constants.TableNames.BANK_MOVEMENT)
     persist_dataframe(mov_df, constants.TableNames.BANK_MOVEMENT)
 
 if __name__ == '__main__':
