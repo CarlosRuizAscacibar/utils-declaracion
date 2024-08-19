@@ -199,7 +199,7 @@ WHERE id_operacion LIKE '%VENTA%' AND fecha LIKE '%2023%';
 
 SELECT * FROM operacion o WHERE o.tipo LIKE '%COMPRA';
 
-SELECT * FROM bank_movements bm  ORDER BY fecha_contable ;
+SELECT * FROM bank_movements bm  ORDER BY fecha_contable DESC ;
 SELECT * FROM operacion o WHERE broker != 'evo';
 SELECT * FROM operacion_forex_vinculada_movimiento;
 
@@ -210,8 +210,10 @@ SELECT o.id,o.fecha,o.isin,o.tipo,o.cantidad,abs(vin_mov.importe_banco) / o.cant
 FROM operacion o 
 JOIN all_operacion_vinculada_movimiento vin_mov ON o.id = vin_mov.id_operacion;
 
+SELECT sum(importe) FROM bank_movements bm WHERE concepto ='DIVIDENDO' AND banco = 'evo' ORDER BY fecha_valor desc;
 
-
+SELECT  * FROM op_dividendo_movimiento_forex odmf WHERE ;
+SELECT sum(importe_eur) FROM op_dividendo_movimiento_forex odmf WHERE id LIKE '%IE00B652H904%';
 
 
 
