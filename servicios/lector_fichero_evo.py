@@ -35,7 +35,7 @@ def leer_excel_evo_y_mapear_objetos(ruta_archivo,broker):
 def _parse_operacion(operacion_str: str) -> TipoOperacion:
     if not operacion_str:
         return None
-    stripped_op = operacion_str.strip().lower()
+    stripped_op = operacion_str.replace('TipoOperacion.','').strip().lower()
     if stripped_op == 'compra':
         return TipoOperacion.COMPRA
     if stripped_op == 'venta':

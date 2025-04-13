@@ -2,6 +2,8 @@
 import pandas as pd
 import dotenv
 import datetime
+
+from loader.persistir_movs import persistir_movimientos
 dotenv.load_dotenv()
 import os
 from decimal import Decimal
@@ -12,8 +14,7 @@ from servicios.validate_dataframe_to_load import validate_data_frame_to_load, re
 from servicios.persist_dataframe import persist_dataframe
 from servicios.date_parser import parse_dd_mm_yyyy
 import modelos.constants as constants
-from os import listdir
-from os.path import isfile, join
+from servicios.utils import list_files_in_folder
 
 
 def read_sabadell_excel(current_file):
@@ -38,17 +39,10 @@ def read_single_file(file_path):
     print(f'Reading sabadell file {file_path}')
     df = read_sabadell_excel(file_path)
     movs = [convert_row_to_movement(x) for x in df.values]
-    print(f'extracted {len(movs)} movements')
-    mov_df = pd.DataFrame(movs).set_index('id')
-    mov_df['importe'] = mov_df['importe'].apply(str)
-    mov_df['saldo'] = mov_df['saldo'].apply(str)
-    validate_data_frame_to_load(mov_df)
-    mov_df = remove_present_ids_in_database(mov_df, constants.TableNames.BANK_MOVEMENT)
-    persist_dataframe(mov_df, constants.TableNames.BANK_MOVEMENT)
-    print('File loaded to the database')
+    persistir_movimientos(movs)
 
 def process_all_files_from_folder(file_path):
-    files_in_folder = [f'{file_path}/{f}' for f in listdir(file_path) if isfile(join(file_path, f))]
+    files_in_folder = list_files_in_folder(file_path)
     for current_file in files_in_folder:
         read_single_file(current_file)
 

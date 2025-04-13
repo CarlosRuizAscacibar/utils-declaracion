@@ -8,6 +8,8 @@ CREATE TABLE "bank_movements" (
   "saldo" TEXT
 );
 
+ALTER TABLE "bank_movements" ADD COLUMN tipo TEXT;
+
 CREATE TABLE "operacion" (
   "id" TEXT NOT NULL PRIMARY KEY,
   "fecha" DATE,
@@ -45,8 +47,12 @@ SELECT * FROM bank_movements bm WHERE concepto LIKE '%dividendo%'
 AND bm.fecha_contable LIKE '2023%';
 SELECT * FROM eur_usd ;
 DROP TABLE eur_usd;
-SELECT * FROM bank_movements bm  ;
-
+SELECT * FROM bank_movements bm where fecha_contable = '2024-12-23';
+SELECT * 
+FROM operacion o 
+JOIN eur_usd eu ON eu.str_time = o.fecha AND o.divisa = 'USD'
+where fecha = '2024-12-23';
+select * from eur_usd eu ;
 DROP VIEW operacion_forex_vinculada_movimiento;
 CREATE VIEW operacion_forex_vinculada_movimiento AS
 SELECT o.fecha,o.nombre,o.importe_neto, o.id AS id_operacion,bm.banco, bm.id AS id_movimiento,
@@ -76,9 +82,40 @@ AND
 		)
 	)
 JOIN eur_usd eu ON eu.str_time = bm.fecha_contable AND o.divisa = 'USD'
-WHERE ABS( ABS(o.importe_neto / eu.value) - ABS(bm.importe)) < 3
+WHERE ABS( ABS(o.importe_neto / eu.value) - ABS(bm.importe)) < 5
 AND o.divisa != 'EUR';
 
+CREATE VIEW operacion_gbp_vinculada_movimiento AS
+SELECT o.fecha,o.nombre,o.importe_neto, o.id AS id_operacion,bm.banco, bm.id AS id_movimiento,
+bm.importe importe_banco,bm.concepto, o.importe_neto / gb.value AS importe_estimado_euro,
+ABS( ABS(o.importe_neto / gb.value) - ABS(bm.importe)) AS diferencia_est_eur 
+FROM operacion o 
+JOIN bank_movements bm ON bm.fecha_contable = o.fecha 
+AND
+	(
+		(
+			o.tipo LIKE '%VENTA'
+			AND
+			(
+				(bm.concepto LIKE '%VENTA%') OR --evo
+				(bm.concepto LIKE '%@%')  --MYINV 
+			)
+			
+		)
+		OR
+		(
+			o.tipo LIKE '%COMPRA'
+			AND
+			(
+				(bm.concepto LIKE '%COMPRA%') OR --evo
+				(bm.concepto LIKE '%@%')  --MYINV 
+			)
+		)
+	)
+JOIN eur_gbp gb ON gb.str_time = bm.fecha_contable AND o.divisa = 'GBP'
+WHERE ABS( ABS(o.importe_neto / gb.value) - ABS(bm.importe)) < 3
+AND o.divisa = 'GBP';
+select * from all_operacion_vinculada_movimiento aovm ;
 
 DROP VIEW operacion_euro_vinculada_movimiento;
 CREATE VIEW operacion_euro_vinculada_movimiento as
@@ -116,6 +153,8 @@ CREATE VIEW all_operacion_vinculada_movimiento
 (fecha,nombre,importe_neto,id_operacion,banco,id_movimiento,importe_banco,concepto,importe_estimado_euro,diferencia_est_eur)
 AS 
 SELECT * FROM operacion_forex_vinculada_movimiento
+UNION
+SELECT * FROM operacion_gbp_vinculada_movimiento
 UNION
 SELECT * FROM operacion_euro_vinculada_movimiento;
 
@@ -164,9 +203,10 @@ SELECT o.id, o.importe_neto / eu.value as importe_eur FROM operacion o
 JOIN eur_usd eu ON eu.str_time = o.fecha AND o.divisa = 'USD'
 WHERE o.tipo = 'TipoOperacion.DIVIDENDO'
 ;
+select * from op_dividendo_movimiento_forex;
 SELECT isin, sum(importe_eur) 
 FROM operacion o JOIN op_dividendo_movimiento_forex op_forex ON o.id = OP_FOREX.id 
-WHERE o.fecha LIKE '2023%'
+WHERE o.fecha LIKE '2024%'
 GROUP BY isin;
 
 SELECT o.isin, o.nombre, OP_FOREX.importe_eur, OP_FOREX.importe_eur / 0.81 AS bruto, (OP_FOREX.importe_eur / 0.81) - OP_FOREX.importe_eur AS retencion
@@ -204,6 +244,7 @@ SELECT * FROM operacion o WHERE broker != 'evo';
 SELECT * FROM operacion_forex_vinculada_movimiento;
 
 SELECT * FROM all_operacion_vinculada_movimiento;
+select * from bank_movements bm ;
 SELECT * FROM bank_movements bm WHERE fecha_contable ='2024-01-23'
 
 SELECT o.id,o.fecha,o.isin,o.tipo,o.cantidad,abs(vin_mov.importe_banco) / o.cantidad AS precio_unitario,'EUR' AS divisa,o.nombre,vin_mov.importe_banco AS importe_neto,o.broker,o.restantes 
@@ -214,6 +255,15 @@ SELECT sum(importe) FROM bank_movements bm WHERE concepto ='DIVIDENDO' AND banco
 
 SELECT  * FROM op_dividendo_movimiento_forex odmf WHERE ;
 SELECT sum(importe_eur) FROM op_dividendo_movimiento_forex odmf WHERE id LIKE '%IE00B652H904%';
+
+SELECT * FROM bank_movements bm 
+WHERE banco = 'sabadell' 
+AND fecha_valor LIKE '2024-08%'
+and id not in ('20240801_1c5d45de4b_500.00_sabadell_1140.31',
+'20240805_47f69178f8_-200.00_sabadell_635.30',
+'20240816_47f69178f8_-100.00_sabadell_402.99',
+'20240802_47f69178f8_-200.00_sabadell_939.41'
+);
 
 
 

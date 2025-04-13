@@ -7,6 +7,7 @@ import loader.mynvestor_banco as mynvestor_banco
 import loader.evo as evo_banco
 import loader.broker_evo as broker_evo
 import loader.broker_myinvestor as broker_myinvestor
+import loader.myinvestor_json as my_investor_json
 
 
 
@@ -28,6 +29,10 @@ def main():
     process_all_files_from_folder(os.getenv(constants.EnvironmentVariableNames.SOURCE_EVO_FILES), broker_evo.process_file)
     print("Loading broker_myinvestor")
     process_all_files_from_folder(os.getenv(constants.EnvironmentVariableNames.SOURCE_MY_INVESTOR_FILES), broker_myinvestor.process_file)
+    print("Loading broker_myinvestor_json")
+    my_investor_json.load_all_operations_and_persist()
+    print("Loading json_bank_myinvestor")
+    my_investor_json.load_all_movements_and_persist()
 
 if __name__ == '__main__':
     main()

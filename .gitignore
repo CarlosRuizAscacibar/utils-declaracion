@@ -2,4 +2,5 @@ env/
 __pycache__/
 real_data/
 .env
-test.ipynb
+*.ipynb
+venv_ubuntu/

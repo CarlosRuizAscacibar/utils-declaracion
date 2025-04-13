@@ -11,5 +11,7 @@ class MovimientoCorriente(BaseModel):
     fecha_contable: date 
     fecha_valor: date 
     banco: str 
-    saldo: Decimal 
+    saldo: Decimal
+    tipo: str = ""
+
 
