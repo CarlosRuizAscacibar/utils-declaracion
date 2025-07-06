@@ -20,3 +20,4 @@ class Operacion():
     importe_neto: Decimal = None
     broker: BrokerEnum = None
     restantes: int    = 0
+    fecha_ultima_venta: date = None

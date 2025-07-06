@@ -265,6 +265,19 @@ and id not in ('20240801_1c5d45de4b_500.00_sabadell_1140.31',
 '20240802_47f69178f8_-200.00_sabadell_939.41'
 );
 
+DROP VIEW v_ultima_venta;
+create view v_ultima_venta as
+select o.id,  max(o2.fecha) fecha_ultima_venta from operacion o 
+join operacion o2 on o.isin = o2.isin 
+and o.tipo like '%COMPRA%'
+and o2.tipo like '%VENTA%'
+and o.fecha > o2.fecha
+group by o.id, o.fecha;
+
+select * from v_ultima_venta;
+ALTER TABLE operacion
+ADD COLUMN fecha_ultima_venta INTEGER DEFAULT 0;
+select * from bank_movements bm ;
 
 
 

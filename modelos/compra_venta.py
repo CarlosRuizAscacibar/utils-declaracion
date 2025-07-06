@@ -23,3 +23,5 @@ class CompraVentaReport(BaseModel):
     precio_total_compra: Decimal
     precio_total_venta: Decimal
     ganancia_perdida: Decimal
+    dias_entre_compra_y_ultima_venta: int
+
