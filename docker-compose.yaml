@@ -1,0 +1,28 @@
+services:
+  utils_declaration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: utils_declaration
+    volumes:
+      - /home/sshonlyuser/webdav/finanzas:/files
+    networks:
+      - homeserver_network
+    environment:
+      - PERSONAL_DATABASE=${PERSONAL_DATABASE}
+      - SOURCE_EVO_FILES=${SOURCE_EVO_FILES}
+      - SOURCE_MY_INVESTOR_FILES=${SOURCE_MY_INVESTOR_FILES}
+      - MOVIMIENTOS_CUENTA_CORRIENTE_EVO=${MOVIMIENTOS_CUENTA_CORRIENTE_EVO}
+      - MOVIMIENTOS_MY_INVESTOR=${MOVIMIENTOS_MY_INVESTOR}
+      - MOVIMIENTOS_SABADELL=${MOVIMIENTOS_SABADELL}
+      - JSON_BROKER_MY_INVESTOR=${JSON_BROKER_MY_INVESTOR}
+      - JSON_BANK_MY_INVESTOR=${JSON_BANK_MY_INVESTOR}
+      - MY_INVESTOR_CASH_ACCOUNT=${MY_INVESTOR_CASH_ACCOUNT}
+      - MY_INVESTOR_SECURITIES_ACCOUNT=${MY_INVESTOR_SECURITIES_ACCOUNT}
+
+networks:
+  homeserver_network:
+    name: homeserver_network
+    external: True
+
+
