@@ -5,6 +5,9 @@ import json
 from decimal import Decimal
 from dotenv import load_dotenv
 import os
+import modelos.constants as constants
+import pandas as pd
+import loader.split_loader as split_loader
 
 load_dotenv()
 
@@ -26,10 +29,11 @@ from servicios.operations_from_db import fetch_operaciones_from_db
 # %%
 import pandas as pd
 ops = fetch_operaciones_from_db()
+ops = ops + split_loader.read_all_splits(os.getenv(constants.EnvironmentVariableNames.SPLIT_PATH))
 ops[0]
 
 # %%
-from servicios.compraventas_por_isin import operaciones_por_isin
+from servicios.compraventas_por_isin import operaciones_por_isin,agrupar_por_isin
 compra_ventas = operaciones_por_isin(ops)
 compra_ventas = sorted(compra_ventas, key=lambda x: x.venta.fecha.isoformat())
 # %%
@@ -37,6 +41,7 @@ from servicios.compraventa_to_report import compraventa_to_report
 from servicios.eur_usd import fetch_usd_eur_quote
 dic_eur_price = fetch_usd_eur_quote(2023)
 dic_eur_price = dic_eur_price | fetch_usd_eur_quote(2024)
+dic_eur_price = dic_eur_price | fetch_usd_eur_quote(2025)
 report = []
 for x in compra_ventas:
     x_to_report = compraventa_to_report(x)
@@ -50,3 +55,7 @@ for x in compra_ventas:
 
 # %%
 pd.DataFrame(report).to_excel('report.xlsx')
+# %%
+pd.DataFrame(compra_ventas).to_excel('compra_ventas.xlsx')
+# %%
+pd.DataFrame(agrupar_por_isin(ops)['IE00B652H904']).to_excel('IE00B652H904.xlsx')

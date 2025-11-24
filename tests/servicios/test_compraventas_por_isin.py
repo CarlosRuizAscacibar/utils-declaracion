@@ -66,7 +66,8 @@ class TestCompraVentasPorIsin(unittest.TestCase):
         op2 = Operacion(fecha=datetime.strptime('03-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=4,precio_unitario=3,tipo=TipoOperacion.COMPRA, restantes=4)
         op3 = Operacion(fecha=datetime.strptime('04-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=5,precio_unitario=2,tipo=TipoOperacion.VENTA, restantes=5)
         op4 = Split(id='split_isin1', isin='ISIN1', fecha=datetime.strptime('05-01-2020', '%d-%m-%Y'), numOriginal=1, numDestino=10)
-        operaciones = [op1,op2,op3, op4]
+        op5 = Operacion(fecha=datetime.strptime('06-01-2020', '%d-%m-%Y'),isin='ISIN1',cantidad=5,precio_unitario=2,tipo=TipoOperacion.VENTA, restantes=5)
+        operaciones = [op1,op2,op3,op4,op5]
 
         dic_isin = operaciones_por_isin(operaciones)
         self.assertEqual(dic_isin[0].cantidad,2)
@@ -76,4 +77,4 @@ class TestCompraVentasPorIsin(unittest.TestCase):
         self.assertEqual(dic_isin[1].compra,op2)
         self.assertEqual(dic_isin[1].venta,op3)
         self.assertEqual(op1.restantes, 0)
-        self.assertEqual(op2.restantes, 10)
+        self.assertEqual(op2.restantes, 5)

@@ -1,6 +1,7 @@
 class TableNames:
     BANK_MOVEMENT="bank_movements"
     OPERATION="operacion"
+    SPLIT="split"
 
 class EnvironmentVariableNames:
     PERSONAL_DATABASE="PERSONAL_DATABASE"
@@ -14,6 +15,7 @@ class EnvironmentVariableNames:
     MOVIMIENTOS_SABADELL="MOVIMIENTOS_SABADELL"
     JSON_BROKER_MY_INVESTOR="JSON_BROKER_MY_INVESTOR"
     JSON_BANK_MY_INVESTOR="JSON_BANK_MY_INVESTOR"
+    SPLIT_PATH="SPLIT_PATH"
 
 class BankNames:
     EVO="evo"
