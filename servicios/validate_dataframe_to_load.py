@@ -14,7 +14,8 @@ def validate_data_frame_to_load(df):
 
 def remove_present_ids_in_database(df_new_rows: pd.DataFrame, table):
     memory_conn = sqlite3.connect(":memory:")
-    conn = sqlite3.connect(os.getenv('PERSONAL_DATABASE'))
+    db_path = os.getenv('PERSONAL_DATABASE')
+    conn = sqlite3.connect(db_path)
     existing_rows = pd.read_sql_query(f"select id from {table}",conn)
     df_new_rows.to_sql("df_new_rows", memory_conn, if_exists='replace')
     existing_rows.to_sql("existing_rows", memory_conn, if_exists='replace')

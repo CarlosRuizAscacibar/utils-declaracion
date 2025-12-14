@@ -5,13 +5,14 @@ from datetime import datetime
 from decimal import Decimal
 from datetime import datetime, timedelta
 
-# %%
-def fetch_usd_eur_quote(year):
-    res = requests.get('https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/usd.xml')
 
-    raw_xml = res.text
+def fetch_eur_conv(divisa):
+    url = f'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/{divisa}.xml'
+
+    res = requests.get(url)
+
     dic = {}
-    # %%
+
     for x in res.text.split('\n'):
         if "<Obs"  in x: 
             # Regular expression pattern to extract date and observation value
@@ -29,12 +30,11 @@ def fetch_usd_eur_quote(year):
                 raise Exception(f"no match for {x}")
 
     
-    current_date = datetime(year, 1, 1)
-    end_date = datetime(year, 12, 31)
-
+    current_date = datetime(2022, 1, 1)
+    end_date = datetime.now()
      
-    dic['2023-01-01']=Decimal('1.0667')
-    dic['2023-12-31']=Decimal('1.1056')
+    #dic['2023-01-01']=Decimal('1.0667')
+    #dic['2023-12-31']=Decimal('1.1056')
 
     while current_date <= end_date:
         if current_date.strftime("%Y-%m-%d") not in dic.keys():
@@ -44,4 +44,10 @@ def fetch_usd_eur_quote(year):
     
     
     return dic
-    # %%
+
+def fetch_all_conv():
+    return {
+        'USD': fetch_eur_conv('usd'),
+        'GBP': fetch_eur_conv('gbp')
+    }
+

@@ -105,10 +105,12 @@ def read_all_movements() -> List[MovimientoCorriente]:
     operations_ids = set()
     for json_file in files_in_folder:
         ops_in_read_file = read_movements_from_json(json_file)
+        print(f'file {json_file} has {len(ops_in_read_file)} movements')
         for x in ops_in_read_file:
             if x.id not in operations_ids:
                 operations_ids.add(x.id)
                 operations.append(x)
+        print(f'detected {len(operations)} unique movements')
     return operations
 
 def load_all_movements_and_persist():

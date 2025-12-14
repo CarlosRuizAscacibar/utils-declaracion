@@ -14,12 +14,14 @@ def movs_to_dataframe(movs: List[MovimientoCorriente]) -> pd.DataFrame:
     mov_df = pd.DataFrame(movs).set_index('id')
     mov_df['importe'] = mov_df['importe'].apply(str)
     mov_df['saldo'] = mov_df['saldo'].apply(str)
+    print(f'df mov has size {mov_df.size}')
     return mov_df
 
 def persistir_movimientos(movs: List[MovimientoCorriente]):
     mov_df = movs_to_dataframe(movs)
     validate_data_frame_to_load(mov_df)
     mov_df = remove_present_ids_in_database(mov_df, constants.TableNames.BANK_MOVEMENT)
+    print(f'Movements to persists {mov_df.size}')
     persist_dataframe(mov_df, constants.TableNames.BANK_MOVEMENT)
     print('File loaded to the database')
 
