@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acciones en cartera</title>
+</head>
+<body>
+    <div x-data="diferentesAcciones()">
+        <ul>
+            <template x-for="d in data">
+                <li><a :href="`/static/cartera_isin.html?isin=${d.isin}&selected_screen=cartera_accion`" x-text="d.nombre"></a></li>
+            </template>
+        </ul>
+    </div>
+    <script src="main.js"></script>
+    <script src="alpine.js"></script>
+</body>
+</html>

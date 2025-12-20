@@ -1,7 +1,16 @@
+from modelos.cartera_isin import CarteraIsin
 from modelos.operacion import Operacion
 from modelos.split import Split
 from modelos.tipo_operacion import TipoOperacion
 from modelos.compra_venta import CompraVenta
+
+def cartere_isin(operaciones: list[Operacion | Split], isin: str) -> CarteraIsin:
+    op_isin_dic: dict[str, list[Operacion]] = agrupar_por_isin(operaciones=operaciones)
+    return CarteraIsin(isin= isin,
+        operaciones = op_isin_dic[isin],
+        compra_ventas = compra_ventas_por_isin(op_isin_dic[isin])
+    )
+
 
 def operaciones_por_isin(operaciones: list[Operacion | Split]) -> list[CompraVenta]:
     op_isin_dic: dict[str, list[Operacion]] = agrupar_por_isin(operaciones=operaciones)

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartera Isin</title>
+</head>
+
+<body>
+    <h1>cartera isin</h1>
+    <div x-data="application()" x-init="init()">
+        <template x-if="screen === 'home'">
+            <div>Home screen
+                <a href="/static/cartera_isin.html?selected_screen=settings">settings</a>
+            </div>
+        </template>
+
+        <template x-if="screen === 'cartera_accion'">
+            <div class="cartera" x-data="carteraScreen('US5949724083')" x-init="init()">
+                <!-- Loading -->
+                <template x-if="loading">
+                    <p class="c-loading">Loading cartera…</p>
+                </template>
+
+                <!-- Error -->
+                <template x-if="error">
+                    <p class="c-error" x-text="error"></p>
+                </template>
+
+                <!-- Content -->
+                <template x-if="data">
+                    <div>
+                        <div>
+                            <h2 x-text="data.operaciones[0]?.nombre"></h2>
+                            <p class="muted">
+                                ISIN: <span x-text="data.isin"></span>
+                            </p>
+                        </div>
+
+                        <!-- Operaciones -->
+                        <section>
+                            <h3>Operaciones</h3>
+
+                            <table class="c-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Importe</th>
+                                        <th>Broker</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="op in data.operaciones" :key="op.id">
+                                        <tr>
+                                            <td x-text="op.fecha"></td>
+                                            <td x-text="op.tipo === 1 ? 'Compra' : 'Venta'"></td>
+                                            <td x-text="op.cantidad"></td>
+                                            <td x-text="op.precio_unitario"></td>
+                                            <td x-text="op.importe_neto"></td>
+                                            <td x-text="op.broker"></td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <!-- Compra ↔ Venta pairs -->
+                        <section>
+                            <h3>Compras y Ventas Asociadas</h3>
+
+                            <template x-for="cv in data.compra_ventas" :key="cv.compra.id">
+                                <div class="c-card">
+                                    <p>
+                                        <strong>Compra:</strong>
+                                        <span x-text="cv.compra.fecha"></span> —
+                                        <span x-text="cv.compra.precio_unitario"></span>
+                                    </p>
+
+                                    <p>
+                                        <strong>Venta:</strong>
+                                        <span x-text="cv.venta.fecha"></span> —
+                                        <span x-text="cv.venta.precio_unitario"></span>
+                                    </p>
+                                </div>
+                            </template>
+                        </section>
+                    </div>
+                </template>
+            </div>
+
+
+        </template>
+
+        <template x-if="screen === 'no_screen'">
+            <div>No screen</div>
+        </template>
+    </div>
+    <script src="/static/main.js"></script>
+    <script src="/static/alpine.js"></script>
+</body>
+
+</html>

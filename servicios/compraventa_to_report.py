@@ -49,3 +49,4 @@ def convert_to_eur(amount_to_convert: Decimal, divisa: str, str_fecha: str, dic_
         return amount_to_convert
     else:
         return amount_to_convert
+

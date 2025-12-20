@@ -1,0 +1,45 @@
+/* layout */
+.cartera {
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: #111;
+}
+.cartera h2 { font-size: 1.2rem; margin: 0 0 .25rem }
+.cartera h3 { font-size: 1rem; margin: 1rem 0 .5rem }
+
+/* states */
+.c-loading { color: #666 }
+.c-error { color: #b00020 }
+
+/* table */
+.c-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.c-table th,
+.c-table td {
+  border: 1px solid #ddd;
+  padding: .4rem .5rem;
+  text-align: left;
+}
+.c-table th {
+  background: #f6f6f6;
+  font-weight: 600;
+}
+.c-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* cards */
+.c-card {
+  border: 1px solid #ddd;
+  padding: .5rem .75rem;
+  margin-bottom: .5rem;
+  background: #fff;
+}
+.c-card strong {
+  font-weight: 600;
+}
+
+/* helpers */
+.muted { color: #666 }

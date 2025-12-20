@@ -36,3 +36,7 @@ def fetch_operaciones_from_db():
     return operaciones
 
 
+def stocks_in_account() -> list[dict[str,str]]:
+    conn = sqlite3.connect(db_path)
+    different_stocks = pd.read_sql("select isin,nombre from operacion group by isin order by min(fecha) desc", conn).to_dict('records')
+    return different_stocks
