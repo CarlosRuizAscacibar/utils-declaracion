@@ -8,7 +8,8 @@ def cartere_isin(operaciones: list[Operacion | Split], isin: str) -> CarteraIsin
     op_isin_dic: dict[str, list[Operacion]] = agrupar_por_isin(operaciones=operaciones)
     return CarteraIsin(isin= isin,
         operaciones = op_isin_dic[isin],
-        compra_ventas = compra_ventas_por_isin(op_isin_dic[isin])
+        compra_ventas = compra_ventas_por_isin(op_isin_dic[isin]),
+        acciones_actual=sum( getattr(op, "restantes", 0) for op in op_isin_dic[isin])
     )
 
 

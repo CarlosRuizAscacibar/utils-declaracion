@@ -14,4 +14,5 @@ class CarteraIsin():
     isin: str
     operaciones: list[Operacion]
     compra_ventas: list[CompraVenta]
+    acciones_actual: int
     

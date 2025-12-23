@@ -1,8 +1,11 @@
+from datetime import date, datetime
 import math
 from flask import Flask, jsonify
 import os
 from flask.json.provider import DefaultJSONProvider
 from enum import Enum
+
+from pydantic import BaseModel
 from loader import split_loader
 from modelos import constants
 from servicios import compraventas_por_isin, operations_from_db
@@ -18,10 +21,14 @@ def is_nan(x):
     
 class CustomJSONProvider(DefaultJSONProvider):
     def default(self, obj):
+        if isinstance(obj, BaseModel):
+            return obj.model_dump(mode="json")
         if isinstance(obj, Enum):
             return obj.value
         if is_nan(obj):
             return None
+        if isinstance(obj, (datetime, date)):
+            return obj.strftime("%d-%m-%Y")
         return super().default(obj)
 
     

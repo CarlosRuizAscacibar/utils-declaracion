@@ -15,9 +15,10 @@ function application() {
     }
 }
 
-function carteraScreen(isin) {
+function carteraScreen() {
   return {
-    isin,
+    isin: new URLSearchParams(location.search)
+                    .get('isin') ,
     data: null,
     loading: false,
     error: null,

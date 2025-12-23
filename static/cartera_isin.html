@@ -48,24 +48,41 @@
                                         <th>Fecha</th>
                                         <th>Tipo</th>
                                         <th>Cantidad</th>
+                                        <th>divisa</th>
                                         <th>Precio</th>
                                         <th>Importe</th>
                                         <th>Broker</th>
+                                        <th>Restantes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <template x-for="op in data.operaciones" :key="op.id">
                                         <tr>
                                             <td x-text="op.fecha"></td>
-                                            <td x-text="op.tipo === 1 ? 'Compra' : 'Venta'"></td>
-                                            <td x-text="op.cantidad"></td>
-                                            <td x-text="op.precio_unitario"></td>
-                                            <td x-text="op.importe_neto"></td>
-                                            <td x-text="op.broker"></td>
+                                            <td x-text="{
+                                                1: 'Compra',
+                                                2: 'Venta',
+                                                3: 'Dividendo',
+                                                4: 'Split'
+                                            }[op.tipo] ?? 'Desconocido'"></td>
+                                            <td x-show="op.tipo === 4" colspan="4">
+                                                <b x-text="op.numOriginal"></b> -> <b x-text="op.numDestino"></b>
+                                            </td>
+
+ 
+                                            <td x-show="op.tipo !== 4" x-text="op.cantidad" style="text-align: center;"></td>
+                                            <td x-show="op.tipo !== 4" x-text="op.divisa"></td>
+                                            <td x-show="op.tipo !== 4" x-text="op.precio_unitario"></td>
+                                            <td x-show="op.tipo !== 4" x-text="op.importe_neto"></td>
+                                            <td x-show="op.tipo !== 4" x-text="op.broker"></td>
+                                            <td x-show="op.tipo !== 4" x-text="op.restantes" style="text-align: center;"></td>
                                         </tr>
                                     </template>
                                 </tbody>
                             </table>
+                            <p>
+                                Acciones actual <b x-text="data.acciones_actual"></b>
+                            </p>
                         </section>
 
                         <!-- Compra ↔ Venta pairs -->
@@ -75,13 +92,11 @@
                             <template x-for="cv in data.compra_ventas" :key="cv.compra.id">
                                 <div class="c-card">
                                     <p>
-                                        <strong>Compra:</strong>
+                                        <strong>C:</strong>
                                         <span x-text="cv.compra.fecha"></span> —
                                         <span x-text="cv.compra.precio_unitario"></span>
-                                    </p>
-
-                                    <p>
-                                        <strong>Venta:</strong>
+                                        &nbsp;
+                                        <strong>V:</strong>
                                         <span x-text="cv.venta.fecha"></span> —
                                         <span x-text="cv.venta.precio_unitario"></span>
                                     </p>

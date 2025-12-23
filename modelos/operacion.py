@@ -1,4 +1,5 @@
 from decimal import Decimal
+from math import isnan
 from modelos.tipo_operacion import TipoOperacion
 from modelos.broker import BrokerEnum
 from datetime import date
@@ -21,3 +22,7 @@ class Operacion():
     broker: BrokerEnum = None
     restantes: int    = 0
     fecha_ultima_venta: date = None
+
+    def __post_init__(self):
+        if isinstance(self.fecha_ultima_venta, float) and isnan(self.fecha_ultima_venta):
+            self.fecha_ultima_venta = None
