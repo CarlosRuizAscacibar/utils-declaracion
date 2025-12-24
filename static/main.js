@@ -40,6 +40,31 @@ function carteraScreen() {
   }
 }
 
+function yearReport() {
+  return {
+    year: new URLSearchParams(location.search)
+                    .get('year') ,
+    data: null,
+    loading: false,
+    error: null,
+
+    async init() {
+      this.loading = true
+      try {
+        const res = await fetch(`/report/year/${this.year}`)
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`)
+        }
+        this.data = await res.json()
+      } catch (e) {
+        this.error = e.message
+      } finally {
+        this.loading = false
+      }
+    }
+  }
+}
+
 function diferentesAcciones(){
   return {
     data: [],

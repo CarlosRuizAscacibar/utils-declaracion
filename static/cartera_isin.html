@@ -8,6 +8,25 @@
 </head>
 
 <body>
+    <template id="compra_ventas_report">
+        <div>
+            <template x-for="cv in data.compra_ventas_report">
+                <div class="c-card">
+                    <p>
+                        <strong>C:</strong>
+                        <span x-text="cv.fecha_compra"></span> —
+                        <span x-text="cv.precio_unitario_compra"></span>
+                        &nbsp;
+                        <strong>V:</strong>
+                        <span x-text="cv.fecha_venta"></span> —
+                        <span x-text="cv.precio_unitario_venta"></span>
+                        <strong>Beneficio €:</strong>
+                        <span x-text="cv.ganancia_perdida_eur"></span>
+                    </p>
+                </div>
+            </template>
+        </div>
+    </template>
     <h1>cartera isin</h1>
     <div x-data="application()" x-init="init()">
         <template x-if="screen === 'home'">
@@ -69,13 +88,15 @@
                                                 <b x-text="op.numOriginal"></b> -> <b x-text="op.numDestino"></b>
                                             </td>
 
- 
-                                            <td x-show="op.tipo !== 4" x-text="op.cantidad" style="text-align: center;"></td>
+
+                                            <td x-show="op.tipo !== 4" x-text="op.cantidad" style="text-align: center;">
+                                            </td>
                                             <td x-show="op.tipo !== 4" x-text="op.divisa"></td>
                                             <td x-show="op.tipo !== 4" x-text="op.precio_unitario"></td>
                                             <td x-show="op.tipo !== 4" x-text="op.importe_neto"></td>
                                             <td x-show="op.tipo !== 4" x-text="op.broker"></td>
-                                            <td x-show="op.tipo !== 4" x-text="op.restantes" style="text-align: center;"></td>
+                                            <td x-show="op.tipo !== 4" x-text="op.restantes"
+                                                style="text-align: center;"></td>
                                         </tr>
                                     </template>
                                 </tbody>
@@ -110,6 +131,51 @@
             </div>
 
 
+        </template>
+
+        <template x-if="screen === 'year_report'">
+            <div class="year_report" x-data="yearReport()">
+                <!-- x-init="init()" -->
+                <template x-if="data">
+                    <section class="content">
+
+                        <h1 x-text="data.year"></h1>
+                        <table class="c-table" border="1">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Compra Fecha</th>
+                                    <th>Precio Unitario Compra</th>
+                                    <th>Venta Fecha</th>
+                                    <th>Precio Unitario Venta</th>
+                                    <th>Beneficio €</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="cv in data.compra_ventas_report" >
+                                    <tr>
+                                        <td x-text="cv.nombre"></td>
+                                        <td x-text="cv.fecha_compra"></td>
+                                        <td x-text="cv.precio_unitario_compra"></td>
+                                        <td x-text="cv.fecha_venta"></td>
+                                        <td x-text="cv.precio_unitario_venta"></td>
+                                        <td x-text="cv.ganancia_perdida_eur"></td>
+                                    </tr>
+                                </template>
+                                <tr>
+                                    <td><b>TOTAL</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b x-text="data.beneficio"></b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </template>
+
+            </div>
         </template>
 
         <template x-if="screen === 'no_screen'">
