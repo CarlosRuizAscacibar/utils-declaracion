@@ -3,13 +3,17 @@ from modelos.operacion import Operacion
 from modelos.split import Split
 from modelos.tipo_operacion import TipoOperacion
 from modelos.compra_venta import CompraVenta
+from servicios.compraventa_to_report import compraventa_to_report
 
-def cartere_isin(operaciones: list[Operacion | Split], isin: str) -> CarteraIsin:
+def cartere_isin(operaciones: list[Operacion | Split], isin: str, dic_curr) -> CarteraIsin:
     op_isin_dic: dict[str, list[Operacion]] = agrupar_por_isin(operaciones=operaciones)
+    compra_ventas = compra_ventas_por_isin(op_isin_dic[isin])
+    compra_ventas_report = [compraventa_to_report(x, dic_curr) for x in compra_ventas]
     return CarteraIsin(isin= isin,
         operaciones = op_isin_dic[isin],
-        compra_ventas = compra_ventas_por_isin(op_isin_dic[isin]),
-        acciones_actual=sum( getattr(op, "restantes", 0) for op in op_isin_dic[isin])
+        compra_ventas = compra_ventas,
+        acciones_actual=sum( getattr(op, "restantes", 0) for op in op_isin_dic[isin]),
+        compra_ventas_report = compra_ventas_report
     )
 
 

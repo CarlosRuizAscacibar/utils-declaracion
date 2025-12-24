@@ -1,5 +1,5 @@
 from decimal import Decimal
-from modelos.compra_venta import CompraVenta
+from modelos.compra_venta import CompraVenta, CompraVentaReport
 from modelos.operacion import Operacion
 from modelos.tipo_operacion import TipoOperacion
 from modelos.broker import BrokerEnum
@@ -15,4 +15,5 @@ class CarteraIsin():
     operaciones: list[Operacion]
     compra_ventas: list[CompraVenta]
     acciones_actual: int
+    compra_ventas_report: list[CompraVentaReport]
     

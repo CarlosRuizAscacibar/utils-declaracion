@@ -89,16 +89,18 @@
                         <section>
                             <h3>Compras y Ventas Asociadas</h3>
 
-                            <template x-for="cv in data.compra_ventas" :key="cv.compra.id">
+                            <template x-for="cv in data.compra_ventas_report">
                                 <div class="c-card">
                                     <p>
                                         <strong>C:</strong>
-                                        <span x-text="cv.compra.fecha"></span> —
-                                        <span x-text="cv.compra.precio_unitario"></span>
+                                        <span x-text="cv.fecha_compra"></span> —
+                                        <span x-text="cv.precio_unitario_compra"></span>
                                         &nbsp;
                                         <strong>V:</strong>
-                                        <span x-text="cv.venta.fecha"></span> —
-                                        <span x-text="cv.venta.precio_unitario"></span>
+                                        <span x-text="cv.fecha_venta"></span> —
+                                        <span x-text="cv.precio_unitario_venta"></span>
+                                        <strong>Beneficio €:</strong>
+                                        <span x-text="cv.ganancia_perdida_eur"></span>
                                     </p>
                                 </div>
                             </template>
