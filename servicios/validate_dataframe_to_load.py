@@ -13,23 +13,49 @@ def validate_data_frame_to_load(df):
     memory_conn.close()
 
 def remove_present_ids_in_database(df_new_rows: pd.DataFrame, table):
-    memory_conn = sqlite3.connect(":memory:")
     db_path = os.getenv('PERSONAL_DATABASE')
-    conn = sqlite3.connect(db_path)
-    existing_rows = pd.read_sql_query(f"select id from {table}",conn)
-    df_new_rows.to_sql("df_new_rows", memory_conn, if_exists='replace')
-    existing_rows.to_sql("existing_rows", memory_conn, if_exists='replace')
-    rows_not_in_db = pd.read_sql_query(f"""
-        select * from df_new_rows where id not in (select id from existing_rows)
-    """, memory_conn)
+    remove_present_ids_in_database_with_path(df_new_rows, table, db_path)
 
-    rows_in_db = pd.read_sql_query(f"""
-        select * from df_new_rows where id in (select id from existing_rows)
-    """, memory_conn)
-    print(f'Removed {rows_in_db.shape[0]} rows as the id was present in table {table}' )
-    conn.close()
-    memory_conn.close()
-    rows_not_in_db = rows_not_in_db.set_index('id')
-    return rows_not_in_db
+
+def remove_present_ids_in_database_with_path(df_new_rows: pd.DataFrame, table, db_path):
+    with sqlite3.connect(":memory:") as memory_conn, sqlite3.connect(db_path) as conn:
+        existing_rows = pd.read_sql_query(
+            f"select id from {table}",
+            conn
+        )
+
+        df_new_rows.to_sql(
+            "df_new_rows",
+            memory_conn,
+            if_exists="replace",
+            index=False
+        )
+        existing_rows.to_sql(
+            "existing_rows",
+            memory_conn,
+            if_exists="replace",
+            index=False
+        )
+
+        rows_not_in_db = pd.read_sql_query("""
+            select *
+            from df_new_rows
+            where id not in (select id from existing_rows)
+        """, memory_conn)
+
+        rows_in_db = pd.read_sql_query("""
+            select *
+            from df_new_rows
+            where id in (select id from existing_rows)
+        """, memory_conn)
+
+        print(
+            f"Removed {rows_in_db.shape[0]} rows "
+            f"as the id was present in table {table}"
+        )
+
+    # outside the with: connections are closed
+    return rows_not_in_db.set_index("id")
+
 
 

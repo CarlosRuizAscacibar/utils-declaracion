@@ -30,13 +30,13 @@ def parse_operacion_record(operacion) -> Operacion:
     return Operacion(**operacion)
 
 def fetch_operaciones_from_db():
-    conn = sqlite3.connect(db_path)
-    operacion_records = pd.read_sql("select * from operacion", conn).to_dict('records')
-    operaciones = [parse_operacion_record(x) for x in operacion_records]
+    with sqlite3.connect(db_path) as conn:
+        operacion_records = pd.read_sql("select * from operacion", conn).to_dict('records')
+        operaciones = [parse_operacion_record(x) for x in operacion_records]
     return operaciones
 
 
 def stocks_in_account() -> list[dict[str,str]]:
-    conn = sqlite3.connect(db_path)
-    different_stocks = pd.read_sql("select isin,nombre from operacion group by isin order by min(fecha) desc", conn).to_dict('records')
+    with sqlite3.connect(db_path) as conn:
+        different_stocks = pd.read_sql("select isin,nombre from operacion group by isin order by min(fecha) desc", conn).to_dict('records')
     return different_stocks
