@@ -35,8 +35,32 @@ def agrupar_por_isin(operaciones: list[Operacion | Split]) -> dict[str, list[Ope
     
     for clave in dic_isin:
         dic_isin[clave] = sorted(dic_isin[clave], key= sort_key)
+        fill_ultima_venta(dic_isin[clave])
 
     return dic_isin
+
+def dias_ultima_venta(op: Operacion) -> int | None:
+        if isinstance(op.fecha_ultima_venta, float):
+            op.fecha_ultima_venta = None
+            return
+    
+        if op.fecha_ultima_venta is None:
+            op.dias_ultima_venta = None
+            return
+
+        op.dias_ultima_venta = (op.fecha - op.fecha_ultima_venta).days
+
+def fill_ultima_venta(operaciones: list[Operacion | Split]) -> None:
+    ultima_fecha_venta = None
+    for op in operaciones:
+        if isinstance(op, Split):
+            continue
+        if op.tipo == TipoOperacion.VENTA:
+            ultima_fecha_venta = op.fecha
+        elif op.tipo == TipoOperacion.COMPRA:
+            op.fecha_ultima_venta = ultima_fecha_venta
+            dias_ultima_venta(op)
+
 
 def sort_key(x: Split | Operacion):
     key = x.fecha.isoformat()

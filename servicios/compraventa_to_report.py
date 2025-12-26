@@ -5,9 +5,7 @@ from modelos.compra_venta import CompraVenta, CompraVentaReport
 def compraventa_to_report(compra_venta: CompraVenta, dic_all_curr) -> CompraVentaReport:
     precio_total_compra = compra_venta.compra.precio_unitario * compra_venta.cantidad
     precio_total_venta = compra_venta.venta.precio_unitario * compra_venta.cantidad
-    dias_entre_compra_y_ultima_venta = 0
-    if compra_venta.compra.fecha_ultima_venta and not math.isnan(compra_venta.compra.fecha_ultima_venta):
-        dias_entre_compra_y_ultima_venta = (compra_venta.compra.fecha - compra_venta.compra.fecha_ultima_venta).days
+    dias_entre_compra_y_ultima_venta = compra_venta.compra.dias_ultima_venta
     
     dec_precio_total_compra = convert_to_eur(precio_total_compra, 
                                              compra_venta.compra.divisa, 

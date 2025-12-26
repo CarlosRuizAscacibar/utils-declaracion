@@ -6,7 +6,7 @@ from datetime import date
 
 
 from modelos.base_model import BaseModel
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 @dataclass
 class Operacion():
@@ -22,6 +22,7 @@ class Operacion():
     broker: BrokerEnum = None
     restantes: int    = 0
     fecha_ultima_venta: date = None
+    dias_ultima_venta: int = None
 
     def __post_init__(self):
         if isinstance(self.fecha_ultima_venta, float) and isnan(self.fecha_ultima_venta):

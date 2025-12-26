@@ -71,6 +71,7 @@
                                         <th>Precio</th>
                                         <th>Importe</th>
                                         <th>Broker</th>
+                                        <th>Dias Ultima Venta</th>
                                         <th>Restantes</th>
                                     </tr>
                                 </thead>
@@ -95,8 +96,12 @@
                                             <td x-show="op.tipo !== 4" x-text="op.precio_unitario"></td>
                                             <td x-show="op.tipo !== 4" x-text="op.importe_neto"></td>
                                             <td x-show="op.tipo !== 4" x-text="op.broker"></td>
+                                            <td x-show="op.tipo !== 4" x-text="op.dias_ultima_venta"
+                                                style="text-align: right;"></td>
                                             <td x-show="op.tipo !== 4" x-text="op.restantes"
                                                 style="text-align: center;"></td>
+
+                                                
                                         </tr>
                                     </template>
                                 </tbody>
