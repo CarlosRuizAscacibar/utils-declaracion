@@ -4,6 +4,7 @@ import dotenv
 from modelos.constants import EnvironmentVariableNames
 import sqlite3
 import pandas as pd
+from modelos.movimiento_corriente import MovimientoCorriente
 from modelos.operacion import Operacion
 from servicios.lector_fichero_evo import _parse_operacion, parse_evo_date
 dotenv.load_dotenv()
@@ -46,3 +47,18 @@ def stocks_in_account() -> list[dict[str,str]]:
     with sqlite3.connect(db_path) as conn:
         different_stocks = pd.read_sql("select isin,nombre from operacion group by isin order by min(fecha) desc", conn).to_dict('records')
     return different_stocks
+
+def dividendos_year(year) -> list[MovimientoCorriente]:
+    with sqlite3.connect(db_path) as conn:
+        movimientos_records = pd.read_sql(f"select * from bank_movements where tipo = 'DIVIDENDO' and fecha_valor like '{year}%'", conn).to_dict('records')
+        movimientos = [parse_movimiento(x) for x in movimientos_records]
+    return movimientos
+
+
+def parse_movimiento(movimiento) -> MovimientoCorriente:
+    movimiento['fecha_valor'] = parse_evo_date(movimiento['fecha_valor'])
+    movimiento['fecha_contable'] = parse_evo_date(movimiento['fecha_contable'])
+    movimiento['importe'] = Decimal(movimiento['importe'])
+    movimiento['saldo'] = Decimal(movimiento['saldo'])
+    
+    return MovimientoCorriente(**movimiento)
