@@ -35,6 +35,12 @@ def fetch_operaciones_from_db():
         operaciones = [parse_operacion_record(x) for x in operacion_records]
     return operaciones
 
+def fetch_compras_ventas_from_db():
+    with sqlite3.connect(db_path) as conn:
+        operacion_records = pd.read_sql("select * from operacion where tipo ='TipoOperacion.VENTA' or tipo = 'TipoOperacion.COMPRA'", conn).to_dict('records')
+        operaciones = [parse_operacion_record(x) for x in operacion_records]
+    return operaciones
+
 
 def stocks_in_account() -> list[dict[str,str]]:
     with sqlite3.connect(db_path) as conn:

@@ -278,6 +278,8 @@ select * from v_ultima_venta;
 ALTER TABLE operacion
 ADD COLUMN fecha_ultima_venta INTEGER DEFAULT 0;
 ALTER TABLE operacion
+ADD COLUMN dias_ultima_venta INTEGER DEFAULT 0;
+ALTER TABLE operacion
 DROP COLUMN fecha_ultima_venta;
 select * from bank_movements bm ;
 

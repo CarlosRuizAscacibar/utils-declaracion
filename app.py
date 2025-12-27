@@ -37,7 +37,7 @@ app.json = CustomJSONProvider(app)
 
 @app.route("/cartera/<isin>", methods=["GET"])
 def ping(isin):
-    all_ops = operations_from_db.fetch_operaciones_from_db()
+    all_ops = operations_from_db.fetch_compras_ventas_from_db()
     all_ops = all_ops + split_loader.read_all_splits(os.getenv(constants.EnvironmentVariableNames.SPLIT_PATH))
     dic_curr = fetch_all_conv()
 
@@ -45,7 +45,7 @@ def ping(isin):
 
 @app.route("/report/year/<year>", methods=["GET"])
 def year_report(year):
-    all_ops = operations_from_db.fetch_operaciones_from_db()
+    all_ops = operations_from_db.fetch_compras_ventas_from_db()
     all_ops = all_ops + split_loader.read_all_splits(os.getenv(constants.EnvironmentVariableNames.SPLIT_PATH))
     dic_curr = fetch_all_conv()
     

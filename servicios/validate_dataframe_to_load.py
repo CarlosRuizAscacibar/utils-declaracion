@@ -14,7 +14,7 @@ def validate_data_frame_to_load(df):
 
 def remove_present_ids_in_database(df_new_rows: pd.DataFrame, table):
     db_path = os.getenv('PERSONAL_DATABASE')
-    remove_present_ids_in_database_with_path(df_new_rows, table, db_path)
+    return remove_present_ids_in_database_with_path(df_new_rows, table, db_path)
 
 
 def remove_present_ids_in_database_with_path(df_new_rows: pd.DataFrame, table, db_path):
@@ -28,13 +28,13 @@ def remove_present_ids_in_database_with_path(df_new_rows: pd.DataFrame, table, d
             "df_new_rows",
             memory_conn,
             if_exists="replace",
-            index=False
+            index=True
         )
         existing_rows.to_sql(
             "existing_rows",
             memory_conn,
             if_exists="replace",
-            index=False
+            index=True
         )
 
         rows_not_in_db = pd.read_sql_query("""
