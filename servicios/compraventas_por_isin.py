@@ -4,16 +4,21 @@ from modelos.split import Split
 from modelos.tipo_operacion import TipoOperacion
 from modelos.compra_venta import CompraVenta
 from servicios.compraventa_to_report import compraventa_to_report
+from servicios.operations_from_db import all_dividendos
 
 def cartere_isin(operaciones: list[Operacion | Split], isin: str, dic_curr) -> CarteraIsin:
     op_isin_dic: dict[str, list[Operacion]] = agrupar_por_isin(operaciones=operaciones)
     compra_ventas = compra_ventas_por_isin(op_isin_dic[isin])
     compra_ventas_report = [compraventa_to_report(x, dic_curr) for x in compra_ventas]
+
+    dividendos = [x for x in all_dividendos() if op_isin_dic[isin][0].nombre in x.concepto]
     return CarteraIsin(isin= isin,
         operaciones = op_isin_dic[isin],
         compra_ventas = compra_ventas,
         acciones_actual=sum( getattr(op, "restantes", 0) for op in op_isin_dic[isin]),
-        compra_ventas_report = compra_ventas_report
+        compra_ventas_report = compra_ventas_report,
+        dividendos=dividendos,
+        beneficio_dividendos=sum(item.importe for item in dividendos),
     )
 
 

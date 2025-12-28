@@ -48,6 +48,12 @@ def stocks_in_account() -> list[dict[str,str]]:
         different_stocks = pd.read_sql("select isin,nombre from operacion group by isin order by min(fecha) desc", conn).to_dict('records')
     return different_stocks
 
+def all_dividendos() -> list[MovimientoCorriente]:
+    with sqlite3.connect(db_path) as conn:
+        movimientos_records = pd.read_sql(f"select * from bank_movements where tipo = 'DIVIDENDO' order by fecha_valor desc", conn).to_dict('records')
+        movimientos = [parse_movimiento(x) for x in movimientos_records]
+    return movimientos
+
 def dividendos_year(year) -> list[MovimientoCorriente]:
     with sqlite3.connect(db_path) as conn:
         movimientos_records = pd.read_sql(f"select * from bank_movements where tipo = 'DIVIDENDO' and fecha_valor like '{year}%'", conn).to_dict('records')

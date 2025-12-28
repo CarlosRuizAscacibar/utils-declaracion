@@ -131,6 +131,32 @@
                                 </div>
                             </template>
                         </section>
+                        <section>
+                            <h3>Dividendos</h3>
+                            <table class="c-table" border="1">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Fecha</th>
+                                    <th>Importe €</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="cv in data.dividendos" >
+                                    <tr>
+                                        <td x-text="cv.concepto"></td>
+                                        <td x-text="cv.fecha_valor"></td>
+                                        <td x-text="cv.importe"></td>
+                                    </tr>
+                                </template>
+                                <tr>
+                                    <td><b>TOTAL</b></td>
+                                    <td></td>
+                                    <td><b x-text="data.beneficio_dividendos"></b></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                        </section>
                     </div>
                 </template>
             </div>
