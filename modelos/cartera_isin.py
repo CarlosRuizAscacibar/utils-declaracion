@@ -19,4 +19,5 @@ class CarteraIsin():
     compra_ventas_report: list[CompraVentaReport]
     dividendos: list[MovimientoCorriente]
     beneficio_dividendos: Decimal
+    valor_actual: Decimal
     
