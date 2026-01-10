@@ -5,3 +5,6 @@ real_data/
 *.ipynb
 venv_ubuntu/
 finanzas/
+node_modules/
+test-results/
+playwright-report/

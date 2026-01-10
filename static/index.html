@@ -7,14 +7,9 @@
 </head>
 <body>
     <h2><a href="/static/cartera_isin.html?year=2025&selected_screen=year_report">2025</a></h2>
-    <div x-data="diferentesAcciones()">
-        <ul>
-            <template x-for="d in data">
-                <li><a :href="`/static/cartera_isin.html?isin=${d.isin}&selected_screen=cartera_accion`" x-text="d.nombre"></a></li>
-            </template>
-        </ul>
+    <div>
+        <ul id="acciones-list"></ul>
     </div>
     <script src="main.js"></script>
-    <script src="alpine.js"></script>
 </body>
 </html>

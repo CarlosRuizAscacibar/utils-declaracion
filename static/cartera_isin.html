@@ -9,237 +9,116 @@
 </head>
 
 <body>
-    <template id="compra_ventas_report">
-        <div>
-            <template x-for="cv in data.compra_ventas_report">
-                <div class="c-card">
-                    <p>
-                        <strong>C:</strong>
-                        <span x-text="cv.fecha_compra"></span> —
-                        <span x-text="cv.precio_unitario_compra"></span>
-                        &nbsp;
-                        <strong>V:</strong>
-                        <span x-text="cv.fecha_venta"></span> —
-                        <span x-text="cv.precio_unitario_venta"></span>
-                        <strong>Beneficio €:</strong>
-                        <span x-text="cv.ganancia_perdida_eur"></span>
+    <h1>cartera isin</h1>
+
+    <div data-screen="home" style="display: none;">
+        Home screen
+        <a href="/static/cartera_isin.html?selected_screen=settings">settings</a>
+    </div>
+
+    <div data-screen="cartera_accion" class="cartera" style="display: none;">
+        <p class="c-loading" style="display: none;">Loading cartera…</p>
+        <p class="c-error" style="display: none;"></p>
+
+        <div class="cartera-content" style="display: none;">
+            <div>
+                <div>
+                    <h2 class="accion-nombre"></h2>
+                    <p class="muted">
+                        ISIN: <span class="accion-isin"></span>
                     </p>
                 </div>
-            </template>
+
+                <section>
+                    <h3>Operaciones</h3>
+
+                    <table class="c-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
+                                <th>divisa</th>
+                                <th>Precio</th>
+                                <th>Importe</th>
+                                <th>Broker</th>
+                                <th>Dias Ultima Venta</th>
+                                <th>Restantes</th>
+                            </tr>
+                        </thead>
+                        <tbody class="operaciones-tbody">
+                        </tbody>
+                    </table>
+                    <p>
+                        Acciones actual <b class="acciones-actual"></b> Valor: <b class="valor-actual"></b>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Compras y Ventas Asociadas</h3>
+                    <div class="compra-ventas-container"></div>
+                </section>
+
+                <section>
+                    <h3>Dividendos</h3>
+                    <table class="c-table" border="1">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Fecha</th>
+                            <th>Importe €</th>
+                        </tr>
+                    </thead>
+                    <tbody class="dividendos-tbody">
+                    </tbody>
+                    </table>
+                </section>
+            </div>
         </div>
-    </template>
-    <h1>cartera isin</h1>
-    <div x-data="application()" x-init="init()">
-        <template x-if="screen === 'home'">
-            <div>Home screen
-                <a href="/static/cartera_isin.html?selected_screen=settings">settings</a>
-            </div>
-        </template>
-
-        <template x-if="screen === 'cartera_accion'">
-            <div class="cartera" x-data="carteraScreen('US5949724083')" x-init="init()">
-                <!-- Loading -->
-                <template x-if="loading">
-                    <p class="c-loading">Loading cartera…</p>
-                </template>
-
-                <!-- Error -->
-                <template x-if="error">
-                    <p class="c-error" x-text="error"></p>
-                </template>
-
-                <!-- Content -->
-                <template x-if="data">
-                    <div>
-                        <div>
-                            <h2 x-text="data.operaciones[0]?.nombre"></h2>
-                            <p class="muted">
-                                ISIN: <span x-text="data.isin"></span>
-                            </p>
-                        </div>
-
-                        <!-- Operaciones -->
-                        <section>
-                            <h3>Operaciones</h3>
-
-                            <table class="c-table">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Tipo</th>
-                                        <th>Cantidad</th>
-                                        <th>divisa</th>
-                                        <th>Precio</th>
-                                        <th>Importe</th>
-                                        <th>Broker</th>
-                                        <th>Dias Ultima Venta</th>
-                                        <th>Restantes</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <template x-for="op in data.operaciones" :key="op.id">
-                                        <tr>
-                                            <td x-text="op.fecha"></td>
-                                            <td x-text="{
-                                                1: 'Compra',
-                                                2: 'Venta',
-                                                3: 'Dividendo',
-                                                4: 'Split'
-                                            }[op.tipo] ?? 'Desconocido'"></td>
-                                            <td x-show="op.tipo === 4" colspan="4">
-                                                <b x-text="op.numOriginal"></b> -> <b x-text="op.numDestino"></b>
-                                            </td>
-
-
-                                            <td x-show="op.tipo !== 4" x-text="op.cantidad" style="text-align: center;">
-                                            </td>
-                                            <td x-show="op.tipo !== 4" x-text="op.divisa"></td>
-                                            <td x-show="op.tipo !== 4" x-text="op.precio_unitario"></td>
-                                            <td x-show="op.tipo !== 4" x-text="op.importe_neto"></td>
-                                            <td x-show="op.tipo !== 4" x-text="op.broker"></td>
-                                            <td x-show="op.tipo !== 4" x-text="op.dias_ultima_venta"
-                                                style="text-align: right;"></td>
-                                            <td x-show="op.tipo !== 4" x-text="op.restantes"
-                                                style="text-align: center;"></td>
-
-                                                
-                                        </tr>
-                                    </template>
-                                </tbody>
-                            </table>
-                            <p>
-                                Acciones actual <b x-text="data.acciones_actual"></b> Valor: <b x-text="data.valor_actual"></b>
-                            </p>
-                        </section>
-
-                        <!-- Compra ↔ Venta pairs -->
-                        <section>
-                            <h3>Compras y Ventas Asociadas</h3>
-
-                            <template x-for="cv in data.compra_ventas_report">
-                                <div class="c-card">
-                                    <p>
-                                        <strong>C:</strong>
-                                        <span x-text="cv.fecha_compra"></span> —
-                                        <span x-text="cv.precio_unitario_compra"></span>
-                                        &nbsp;
-                                        <strong>V:</strong>
-                                        <span x-text="cv.fecha_venta"></span> —
-                                        <span x-text="cv.precio_unitario_venta"></span>
-                                        <strong>Beneficio €:</strong>
-                                        <span x-text="cv.ganancia_perdida_eur"></span>
-                                    </p>
-                                </div>
-                            </template>
-                        </section>
-                        <section>
-                            <h3>Dividendos</h3>
-                            <table class="c-table" border="1">
-                            <thead>
-                                <tr>
-                                    <th>Concepto</th>
-                                    <th>Fecha</th>
-                                    <th>Importe €</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="cv in data.dividendos" >
-                                    <tr>
-                                        <td x-text="cv.concepto"></td>
-                                        <td x-text="cv.fecha_valor"></td>
-                                        <td x-text="cv.importe"></td>
-                                    </tr>
-                                </template>
-                                <tr>
-                                    <td><b>TOTAL</b></td>
-                                    <td></td>
-                                    <td><b x-text="data.beneficio_dividendos"></b></td>
-                                </tr>
-                            </tbody>
-                        </table>    
-                        </section>
-                    </div>
-                </template>
-            </div>
-
-
-        </template>
-
-        <template x-if="screen === 'year_report'">
-            <div class="year_report" x-data="yearReport()">
-                <!-- x-init="init()" -->
-                <template x-if="data">
-                    <section class="content">
-
-                        <h1 x-text="data.year"></h1>
-                        <table class="c-table" border="1">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Compra Fecha</th>
-                                    <th>Precio Unitario Compra</th>
-                                    <th>Venta Fecha</th>
-                                    <th>Precio Unitario Venta</th>
-                                    <th>Beneficio €</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="cv in data.compra_ventas_report" >
-                                    <tr>
-                                        <td x-text="cv.nombre"></td>
-                                        <td x-text="cv.fecha_compra"></td>
-                                        <td x-text="cv.precio_unitario_compra"></td>
-                                        <td x-text="cv.fecha_venta"></td>
-                                        <td x-text="cv.precio_unitario_venta"></td>
-                                        <td x-text="cv.ganancia_perdida_eur"></td>
-                                    </tr>
-                                </template>
-                                <tr>
-                                    <td><b>TOTAL</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b x-text="data.beneficio"></b></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="c-table" border="1">
-                            <thead>
-                                <tr>
-                                    <th>Concepto</th>
-                                    <th>Fecha</th>
-                                    <th>Importe €</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="cv in data.dividendos" >
-                                    <tr>
-                                        <td x-text="cv.concepto"></td>
-                                        <td x-text="cv.fecha_valor"></td>
-                                        <td x-text="cv.importe"></td>
-                                    </tr>
-                                </template>
-                                <tr>
-                                    <td><b>TOTAL</b></td>
-                                    <td></td>
-                                    <td><b x-text="data.beneficio_dividendos"></b></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </section>
-                </template>
-
-            </div>
-        </template>
-
-        <template x-if="screen === 'no_screen'">
-            <div>No screen</div>
-        </template>
     </div>
+
+    <div data-screen="year_report" class="year_report" style="display: none;">
+        <p class="c-loading" style="display: none;">Loading…</p>
+        <p class="c-error" style="display: none;"></p>
+
+        <div class="year-content" style="display: none;">
+            <section class="content">
+                <h1 class="year-title"></h1>
+                <table class="c-table" border="1">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Compra Fecha</th>
+                            <th>Precio Unitario Compra</th>
+                            <th>Venta Fecha</th>
+                            <th>Precio Unitario Venta</th>
+                            <th>Beneficio €</th>
+                        </tr>
+                    </thead>
+                    <tbody class="compra-ventas-tbody">
+                    </tbody>
+                </table>
+
+                <table class="c-table" border="1">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Fecha</th>
+                            <th>Importe €</th>
+                        </tr>
+                    </thead>
+                    <tbody class="dividendos-tbody">
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <div data-screen="no_screen" style="display: none;">
+        No screen
+    </div>
+
     <script src="/static/main.js"></script>
-    <script src="/static/alpine.js"></script>
 </body>
 
 </html>
