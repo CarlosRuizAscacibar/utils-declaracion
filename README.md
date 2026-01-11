@@ -256,18 +256,8 @@ python -m unittest tests.servicios.test_backup_service
 ```
 
 #### Frontend Tests
-```bash
-cd tests/frontend
 
-# Run all tests
-npm test
-
-# Run with UI
-npm run test:ui
-
-# Run E2E tests
-npm run test:e2e
-```
+See [FRONTEND.md](docs/FRONTEND.md) for detailed frontend development and testing instructions.
 
 ### Code Style
 
