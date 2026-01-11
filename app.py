@@ -64,6 +64,14 @@ def backup_database():
     else:
         return jsonify({"error": message}), 500
 
+@app.route("/backup/last", methods=["GET"])
+def get_last_backup():
+    last_backup = backup_service.get_last_backup_time()
+    if last_backup:
+        return jsonify({"last_backup": last_backup})
+    else:
+        return jsonify({"last_backup": None}), 404
+
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory(app.static_folder, filename)

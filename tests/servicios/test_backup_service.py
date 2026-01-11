@@ -4,7 +4,7 @@ import unittest
 import shutil
 from datetime import datetime
 
-from servicios.backup_service import create_database_backup
+from servicios.backup_service import create_database_backup, get_last_backup_time
 from modelos.constants import EnvironmentVariableNames
 
 
@@ -128,6 +128,69 @@ class TestBackupService(unittest.TestCase):
 
         # Clean up the file created in the default location
         os.unlink(path)
+
+    def test_last_backup_time_after_backup(self):
+        """Test that last backup time is updated after successful backup"""
+        # Initially no last backup
+        initial_time = get_last_backup_time()
+        self.assertIsNone(initial_time)
+
+        # Create backup
+        success, message, path = create_database_backup()
+        self.assertTrue(success)
+
+        # Now there should be a last backup time
+        last_time = get_last_backup_time()
+        self.assertIsNotNone(last_time)
+        self.assertIsInstance(last_time, str)
+
+        # Should be a valid ISO format datetime
+        try:
+            datetime.fromisoformat(last_time)
+        except ValueError:
+            self.fail("Last backup time is not a valid ISO format")
+
+    def test_get_last_backup_time_no_backup(self):
+        """Test get_last_backup_time returns None when no backup file exists"""
+        # Ensure no last_backup.txt file exists
+        last_backup_file = os.path.join(self.backup_folder, 'last_backup.txt')
+        if os.path.exists(last_backup_file):
+            os.unlink(last_backup_file)
+
+        last_time = get_last_backup_time()
+        self.assertIsNone(last_time)
+
+    def test_get_last_backup_time_with_file(self):
+        """Test get_last_backup_time reads from file correctly"""
+        test_time = "2023-10-15T14:30:00.123456"
+        last_backup_file = os.path.join(self.backup_folder, 'last_backup.txt')
+        with open(last_backup_file, 'w') as f:
+            f.write(test_time)
+
+        last_time = get_last_backup_time()
+        self.assertEqual(last_time, test_time)
+
+    def test_backup_updates_last_backup_file(self):
+        """Test that successful backup overwrites the last backup file"""
+        # Set initial last backup time
+        initial_time = "2023-01-01T00:00:00"
+        last_backup_file = os.path.join(self.backup_folder, 'last_backup.txt')
+        with open(last_backup_file, 'w') as f:
+            f.write(initial_time)
+
+        # Create backup
+        success, message, path = create_database_backup()
+        self.assertTrue(success)
+
+        # Last backup time should be updated
+        new_time = get_last_backup_time()
+        self.assertIsNotNone(new_time)
+        self.assertNotEqual(new_time, initial_time)
+
+        # Should be recent
+        new_datetime = datetime.fromisoformat(new_time)
+        now = datetime.now()
+        self.assertLess((now - new_datetime).total_seconds(), 10)  # Within 10 seconds
 
 
 if __name__ == '__main__':

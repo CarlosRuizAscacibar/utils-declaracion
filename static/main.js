@@ -454,6 +454,54 @@ export class DiferentesAcciones {
     }
 }
 
+export class Backup {
+    constructor() {
+        this.button = document.getElementById('backup-button')
+        this.lastBackupEl = document.getElementById('last-backup-info')
+    }
+
+    async init() {
+        if (this.button) {
+            this.button.addEventListener('click', () => this.performBackup())
+        }
+        await this.updateLastBackupDisplay()
+    }
+
+    async performBackup() {
+        try {
+            const res = await fetch('/backup', { method: 'POST' })
+            if (res.ok) {
+                alert('Backup completed successfully!')
+                await this.updateLastBackupDisplay()
+            } else {
+                alert('Backup failed: ' + res.status)
+            }
+        } catch (e) {
+            alert('Backup error: ' + e.message)
+        }
+    }
+
+    async updateLastBackupDisplay() {
+        if (!this.lastBackupEl) return
+        try {
+            const res = await fetch('/backup/last')
+            if (res.ok) {
+                const data = await res.json()
+                if (data.last_backup) {
+                    const date = new Date(data.last_backup)
+                    this.lastBackupEl.textContent = `Last backup: ${date.toLocaleString()}`
+                } else {
+                    this.lastBackupEl.textContent = 'No backups yet'
+                }
+            } else {
+                this.lastBackupEl.textContent = 'Unable to fetch last backup info'
+            }
+        } catch (e) {
+            this.lastBackupEl.textContent = 'Error fetching last backup info'
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const app = new Application()
 
@@ -467,4 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
     app.registerScreen('home', diferentesAcciones)
 
     app.init()
+
+    const backup = new Backup()
+    backup.init()
 })
