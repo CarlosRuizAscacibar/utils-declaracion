@@ -81,13 +81,18 @@ export class CarteraScreen {
         this.data = null
         this.loading = false
         this.error = null
-        this.container = document.querySelector('[data-screen="cartera_accion"]')
+        this.screenName = 'cartera_accion'
     }
 
     async init() {
         this.isin = this.app?.params?.isin || new URLSearchParams(location.search).get('isin')
         if (!this.isin) return
 
+        this.container = document.querySelector(`[data-screen="${this.screenName}"]`)
+        if (!this.container) {
+            console.error(`Container for ${this.screenName} not found`)
+            return
+        }
         this.container.style.display = 'block'
         this.setLoading(true)
         this.clearError()
@@ -271,17 +276,18 @@ export class CarteraScreen {
 
 export class YearReport {
     constructor() {
-        this.year = null
-        this.data = null
-        this.loading = false
-        this.error = null
-        this.container = document.querySelector('[data-screen="year_report"]')
+        this.screenName = 'year_report'
     }
 
     async init() {
         this.year = this.app?.params?.year || new URLSearchParams(location.search).get('year')
         if (!this.year) return
 
+        this.container = document.querySelector(`[data-screen="${this.screenName}"]`)
+        if (!this.container) {
+            console.error(`Container for ${this.screenName} not found`)
+            return
+        }
         this.container.style.display = 'block'
         this.setLoading(true)
         this.clearError()
@@ -410,11 +416,16 @@ export class YearReport {
 export class DiferentesAcciones {
     constructor() {
         this.data = []
-        this.container = document.querySelector('[data-screen="home"]')
+        this.screenName = 'diferentes_acciones'
     }
 
     async init() {
         console.log('DiferentesAcciones init called')
+        this.container = document.querySelector(`[data-screen="${this.screenName}"]`)
+        if (!this.container) {
+            console.error(`Container for ${this.screenName} not found`)
+            return
+        }
         this.container.style.display = 'block'
         try {
             const res = await fetch(`/diferentes_acciones`)
@@ -425,14 +436,14 @@ export class DiferentesAcciones {
             this.data = await res.json()
             console.log('Data received:', this.data.length, 'stocks')
             this.render()
-        } catch (e) {
-            console.error('Error fetching acciones:', e)
-            // Clear any previous content on error
-            const list = this.container.querySelector('#acciones-list')
-            if (list) {
-                list.innerHTML = ''
+            } catch (e) {
+                console.error('Error fetching acciones:', e)
+                // Show error message
+                const list = this.container.querySelector('#acciones-list')
+                if (list) {
+                    list.innerHTML = '<li style="padding: 1rem; color: #b00020;">Error loading stocks. Please check your connection and try again.</li>'
+                }
             }
-        }
     }
 
     render() {
@@ -441,16 +452,42 @@ export class DiferentesAcciones {
 
         list.innerHTML = ''
 
-        this.data.forEach(d => {
+        if (this.data.length === 0) {
             const li = document.createElement('li')
-            const a = document.createElement('a')
-            a.href = `/static/cartera_isin.html?isin=${d.isin}&selected_screen=cartera_accion`
-            a.setAttribute('data-navigate', 'cartera_accion')
-            a.setAttribute('data-isin', d.isin)
-            a.textContent = d.nombre
-            li.appendChild(a)
+            li.textContent = 'No stocks found in your portfolio.'
+            li.style.padding = '1rem'
+            li.style.color = '#666'
             list.appendChild(li)
-        })
+        } else {
+            this.data.forEach(d => {
+                const li = document.createElement('li')
+                const a = document.createElement('a')
+                a.href = `/static/cartera_isin.html?isin=${d.isin}&selected_screen=cartera_accion`
+                a.setAttribute('data-navigate', 'cartera_accion')
+                a.setAttribute('data-isin', d.isin)
+                a.textContent = d.nombre
+                li.appendChild(a)
+                list.appendChild(li)
+            })
+        }
+    }
+}
+
+export class Home {
+    constructor() {
+        this.screenName = 'home'
+    }
+
+    async init() {
+        this.container = document.querySelector(`[data-screen="${this.screenName}"]`)
+        if (!this.container) {
+            console.error(`Container for ${this.screenName} not found`)
+            return
+        }
+        this.container.style.display = 'block'
+        // Show backup after loading
+        const backup = new Backup()
+        await backup.init()
     }
 }
 
@@ -472,6 +509,9 @@ export class Backup {
     }
 
     async performBackup() {
+        if (this.button.disabled) return
+        this.button.disabled = true
+        this.button.textContent = 'Backing up...'
         try {
             const res = await fetch('/backup', { method: 'POST' })
             if (res.ok) {
@@ -482,6 +522,9 @@ export class Backup {
             }
         } catch (e) {
             alert('Backup error: ' + e.message)
+        } finally {
+            this.button.disabled = false
+            this.button.textContent = 'Backup Data'
         }
     }
 
@@ -509,17 +552,17 @@ export class Backup {
 document.addEventListener('DOMContentLoaded', () => {
     const app = new Application()
 
+    const home = new Home()
+    app.registerScreen('home', home)
+
+    const diferentesAcciones = new DiferentesAcciones()
+    app.registerScreen('diferentes_acciones', diferentesAcciones)
+
     const yearReport = new YearReport()
     app.registerScreen('year_report', yearReport)
 
     const carteraScreen = new CarteraScreen()
     app.registerScreen('cartera_accion', carteraScreen)
 
-    const diferentesAcciones = new DiferentesAcciones()
-    app.registerScreen('home', diferentesAcciones)
-
     app.init()
-
-    const backup = new Backup()
-    backup.init()
 })

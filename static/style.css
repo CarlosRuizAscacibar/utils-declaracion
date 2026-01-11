@@ -102,14 +102,36 @@
   transition: background-color 0.2s;
 }
 
-#backup-button:hover {
+#backup-button:hover:not(:disabled) {
   background: #0056b3;
+}
+
+#backup-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
 }
 
 #last-backup-info {
   margin: .5rem 0 1rem;
   font-size: 12px;
   color: #666;
+}
+
+[data-screen="home"] a[data-navigate] {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  padding: .5rem 1rem;
+  background: #fff;
+  border-radius: 4px;
+  transition: background-color 0.2s, border-color 0.2s;
+  margin-bottom: 1rem;
+}
+
+[data-screen="home"] a[data-navigate]:hover {
+  background: #f9f9f9;
+  border-color: #ccc;
 }
 
 

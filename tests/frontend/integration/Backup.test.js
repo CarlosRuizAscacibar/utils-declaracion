@@ -50,9 +50,14 @@ describe('Backup Integration Tests', () => {
 
       backup.button.click()
 
+      expect(backup.button.disabled).toBe(true)
+      expect(backup.button.textContent).toBe('Backing up...')
+
       await new Promise(resolve => setTimeout(resolve, 0)) // Wait for async
 
       expect(global.fetch).toHaveBeenCalledWith('/backup', { method: 'POST' })
+      expect(backup.button.disabled).toBe(false)
+      expect(backup.button.textContent).toBe('Backup Data')
     })
 
     it('should show success alert on successful backup', async () => {
@@ -64,6 +69,8 @@ describe('Backup Integration Tests', () => {
       await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(alertSpy).toHaveBeenCalledWith('Backup completed successfully!')
+      expect(backup.button.disabled).toBe(false)
+      expect(backup.button.textContent).toBe('Backup Data')
       alertSpy.mockRestore()
     })
 
@@ -76,6 +83,8 @@ describe('Backup Integration Tests', () => {
       await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(alertSpy).toHaveBeenCalledWith('Backup failed: 500')
+      expect(backup.button.disabled).toBe(false)
+      expect(backup.button.textContent).toBe('Backup Data')
       alertSpy.mockRestore()
     })
 
@@ -88,6 +97,8 @@ describe('Backup Integration Tests', () => {
       await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(alertSpy).toHaveBeenCalledWith('Backup error: Network error')
+      expect(backup.button.disabled).toBe(false)
+      expect(backup.button.textContent).toBe('Backup Data')
       alertSpy.mockRestore()
     })
 

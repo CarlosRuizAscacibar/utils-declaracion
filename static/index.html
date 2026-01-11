@@ -10,18 +10,33 @@
 
 <body>
     <div data-screen="home" style="display: block;">
-        <h1>Acciones en cartera</h1>
-
+        <h1>Stock Portfolio Manager</h1>
+        <p>Welcome to your stock portfolio dashboard.</p>
+        <div>
+            <a href="#" data-navigate="diferentes_acciones">View Stocks</a>
+        </div>
         <div style="display: none;">
             <button id="backup-button">Backup Data</button>
             <p id="last-backup-info"></p>
         </div>
-
         <h2><a href="#" data-navigate="year_report" data-year="2025">2025 Report</a></h2>
+
+        <section>
+            <h3>Database Backup</h3>
+            <div style="display: none;">
+                <button id="backup-button">Backup Data</button>
+                <p id="last-backup-info"></p>
+            </div>
+        </section>
+        <p><a href="#" data-navigate="home">← Back to home</a></p>
+    </div>
+
+    <div data-screen="diferentes_acciones" style="display: none;">
+        <h1>Acciones en cartera</h1>
         <div>
             <ul id="acciones-list"></ul>
         </div>
-    </div>
+        <p><a href="#" data-navigate="home">← Back to home</a></p>
     </div>
 
     <div data-screen="cartera_accion" class="cartera" style="display: none;">
@@ -83,7 +98,7 @@
                 </section>
             </div>
         </div>
-        <p><a href="#" data-navigate="home">← Back to stocks</a></p>
+        <p><a href="#" data-navigate="home">← Back to Home</a></p>
     </div>
 
     <div data-screen="year_report" class="year_report" style="display: none;">
@@ -128,7 +143,7 @@
                 </section>
             </section>
         </div>
-        <p><a href="#" data-navigate="home">← Back to stocks</a></p>
+        <p><a href="#" data-navigate="home">← Back to home</a></p>
     </div>
 
     <div data-screen="no_screen" style="display: none;">

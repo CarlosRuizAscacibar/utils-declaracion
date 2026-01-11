@@ -9,7 +9,7 @@ describe('DiferentesAcciones Integration Tests', () => {
 
   beforeEach(() => {
     container = document.createElement('div')
-    container.setAttribute('data-screen', 'home')
+    container.setAttribute('data-screen', 'diferentes_acciones')
     const list = document.createElement('ul')
     list.id = 'acciones-list'
     container.appendChild(list)
@@ -19,15 +19,14 @@ describe('DiferentesAcciones Integration Tests', () => {
   })
 
   afterEach(() => {
-    const homeDiv = document.querySelector('[data-screen="home"]')
-    if (homeDiv) {
-      homeDiv.remove()
+    const accionesDiv = document.querySelector('[data-screen="diferentes_acciones"]')
+    if (accionesDiv) {
+      accionesDiv.remove()
     }
   })
 
   describe('Initialization', () => {
-    it('should have container reference', () => {
-      expect(diferentesAcciones.container).toBe(container)
+    it('should initialize data array', () => {
       expect(diferentesAcciones.data).toEqual([])
     })
 
@@ -118,14 +117,15 @@ describe('DiferentesAcciones Integration Tests', () => {
       consoleSpy.mockRestore()
     })
 
-    it('should not render anything on error', async () => {
+    it('should show error message on error', async () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       mockFetchError('/diferentes_acciones', 404, 'Not Found')
 
       await diferentesAcciones.init()
 
       const listItems = container.querySelectorAll('li')
-      expect(listItems.length).toBe(0)
+      expect(listItems.length).toBe(1)
+      expect(listItems[0].textContent).toBe('Error loading stocks. Please check your connection and try again.')
 
       consoleSpy.mockRestore()
     })
@@ -138,9 +138,10 @@ describe('DiferentesAcciones Integration Tests', () => {
       await diferentesAcciones.init()
 
       expect(diferentesAcciones.data).toEqual([])
-      
+
       const listItems = container.querySelectorAll('li')
-      expect(listItems.length).toBe(0)
+      expect(listItems.length).toBe(1)
+      expect(listItems[0].textContent).toBe('No stocks found in your portfolio.')
     })
   })
 
