@@ -1,6 +1,6 @@
 from datetime import date, datetime
 import math
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 import os
 from flask.json.provider import DefaultJSONProvider
 from enum import Enum
@@ -10,7 +10,7 @@ from loader import split_loader
 from modelos import constants
 from servicios import compraventas_por_isin, operations_from_db, year_report_srv
 from servicios.eur_usd import fetch_all_conv
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 import dotenv
 dotenv.load_dotenv()
 
@@ -54,6 +54,14 @@ def year_report(year):
 @app.route("/diferentes_acciones", methods=["GET"])
 def diferentes_acciones():
     return jsonify(operations_from_db.stocks_in_account())
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory(app.static_folder, filename)
+
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

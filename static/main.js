@@ -2,20 +2,65 @@ export class Application {
     constructor() {
         this.screens = new Map()
         this.currentScreen = 'no_screen'
+        this.params = {}
     }
 
     init() {
         this.syncFromUrl()
         window.addEventListener('popstate', () => this.syncFromUrl())
+
+        // Handle navigation clicks
+        document.addEventListener('click', (e) => {
+            const navigateEl = e.target.closest('[data-navigate]')
+            if (navigateEl) {
+                e.preventDefault()
+                const screen = navigateEl.getAttribute('data-navigate')
+                const params = {}
+
+                // Extract data attributes as params
+                for (const attr of navigateEl.attributes) {
+                    if (attr.name.startsWith('data-') && attr.name !== 'data-navigate') {
+                        const paramName = attr.name.replace('data-', '')
+                        params[paramName] = attr.value
+                    }
+                }
+
+                this.navigateTo(screen, params)
+            }
+        })
     }
 
     syncFromUrl() {
-        this.currentScreen = new URLSearchParams(location.search).get('selected_screen') ?? 'no_screen'
+        const urlParams = new URLSearchParams(location.search)
+        this.currentScreen = urlParams.get('selected_screen') ?? 'no_screen'
+        this.params = {}
+        for (const [key, value] of urlParams.entries()) {
+            if (key !== 'selected_screen') {
+                this.params[key] = value
+            }
+        }
         this.showScreen(this.currentScreen)
+    }
+
+    navigateTo(screenName, params = {}) {
+        this.currentScreen = screenName
+        this.params = params
+
+        // Update URL
+        const url = new URL(window.location)
+        url.searchParams.set('selected_screen', screenName)
+        for (const [key, value] of Object.entries(params)) {
+            url.searchParams.set(key, value)
+        }
+        window.history.pushState({}, '', url)
+
+        this.showScreen(screenName)
     }
 
     registerScreen(name, component) {
         this.screens.set(name, component)
+        // Pass reference to app so components can access params
+        component.app = this
     }
 
     showScreen(screenName) {
@@ -32,7 +77,7 @@ export class Application {
 
 export class CarteraScreen {
     constructor() {
-        this.isin = new URLSearchParams(location.search).get('isin')
+        this.isin = null
         this.data = null
         this.loading = false
         this.error = null
@@ -40,8 +85,9 @@ export class CarteraScreen {
     }
 
     async init() {
+        this.isin = this.app?.params?.isin || new URLSearchParams(location.search).get('isin')
         if (!this.isin) return
-        
+
         this.container.style.display = 'block'
         this.setLoading(true)
         this.clearError()
@@ -225,7 +271,7 @@ export class CarteraScreen {
 
 export class YearReport {
     constructor() {
-        this.year = new URLSearchParams(location.search).get('year')
+        this.year = null
         this.data = null
         this.loading = false
         this.error = null
@@ -233,6 +279,7 @@ export class YearReport {
     }
 
     async init() {
+        this.year = this.app?.params?.year || new URLSearchParams(location.search).get('year')
         if (!this.year) return
 
         this.container.style.display = 'block'
@@ -363,19 +410,26 @@ export class YearReport {
 export class DiferentesAcciones {
     constructor() {
         this.data = []
-        this.container = document.getElementById('acciones-list')
+        this.container = document.querySelector('#acciones-list')
     }
 
     async init() {
+        console.log('DiferentesAcciones init called')
         try {
             const res = await fetch(`/diferentes_acciones`)
+            console.log('Fetch response:', res.status)
             if (!res.ok) {
                 throw new Error(`HTTP ${res.status}`)
             }
             this.data = await res.json()
+            console.log('Data received:', this.data.length, 'stocks')
             this.render()
         } catch (e) {
             console.error('Error fetching acciones:', e)
+            // Clear any previous content on error
+            if (this.container) {
+                this.container.innerHTML = ''
+            }
         }
     }
 
@@ -388,6 +442,8 @@ export class DiferentesAcciones {
             const li = document.createElement('li')
             const a = document.createElement('a')
             a.href = `/static/cartera_isin.html?isin=${d.isin}&selected_screen=cartera_accion`
+            a.setAttribute('data-navigate', 'cartera_accion')
+            a.setAttribute('data-isin', d.isin)
             a.textContent = d.nombre
             li.appendChild(a)
             this.container.appendChild(li)
@@ -405,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
     app.registerScreen('cartera_accion', carteraScreen)
 
     const diferentesAcciones = new DiferentesAcciones()
-    diferentesAcciones.init()
+    app.registerScreen('home', diferentesAcciones)
 
     app.init()
 })
