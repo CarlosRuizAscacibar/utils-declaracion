@@ -1,7 +1,7 @@
 export class Application {
     constructor() {
         this.screens = new Map()
-        this.currentScreen = 'no_screen'
+        this.currentScreen = 'home'
         this.params = {}
     }
 
@@ -32,7 +32,7 @@ export class Application {
 
     syncFromUrl() {
         const urlParams = new URLSearchParams(location.search)
-        this.currentScreen = urlParams.get('selected_screen') ?? 'no_screen'
+        this.currentScreen = urlParams.get('selected_screen') ?? 'home'
         this.params = {}
         for (const [key, value] of urlParams.entries()) {
             if (key !== 'selected_screen') {
@@ -410,11 +410,12 @@ export class YearReport {
 export class DiferentesAcciones {
     constructor() {
         this.data = []
-        this.container = document.querySelector('#acciones-list')
+        this.container = document.querySelector('[data-screen="home"]')
     }
 
     async init() {
         console.log('DiferentesAcciones init called')
+        this.container.style.display = 'block'
         try {
             const res = await fetch(`/diferentes_acciones`)
             console.log('Fetch response:', res.status)
@@ -427,16 +428,18 @@ export class DiferentesAcciones {
         } catch (e) {
             console.error('Error fetching acciones:', e)
             // Clear any previous content on error
-            if (this.container) {
-                this.container.innerHTML = ''
+            const list = this.container.querySelector('#acciones-list')
+            if (list) {
+                list.innerHTML = ''
             }
         }
     }
 
     render() {
-        if (!this.container) return
+        const list = this.container.querySelector('#acciones-list')
+        if (!list) return
 
-        this.container.innerHTML = ''
+        list.innerHTML = ''
 
         this.data.forEach(d => {
             const li = document.createElement('li')
@@ -446,7 +449,7 @@ export class DiferentesAcciones {
             a.setAttribute('data-isin', d.isin)
             a.textContent = d.nombre
             li.appendChild(a)
-            this.container.appendChild(li)
+            list.appendChild(li)
         })
     }
 }
