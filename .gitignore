@@ -2,6 +2,7 @@ env/
 __pycache__/
 real_data/
 .env
+.env.homeserver
 *.ipynb
 venv_ubuntu/
 finanzas/

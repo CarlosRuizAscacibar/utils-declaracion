@@ -98,7 +98,7 @@ export class CarteraScreen {
         this.clearError()
 
         try {
-            const res = await fetch(`/cartera/${this.isin}`)
+            const res = await fetch(`cartera/${this.isin}`)
             if (!res.ok) {
                 throw new Error(`HTTP ${res.status}`)
             }
@@ -293,7 +293,7 @@ export class YearReport {
         this.clearError()
 
         try {
-            const res = await fetch(`/report/year/${this.year}`)
+            const res = await fetch(`report/year/${this.year}`)
             if (!res.ok) {
                 throw new Error(`HTTP ${res.status}`)
             }
@@ -428,7 +428,7 @@ export class DiferentesAcciones {
         }
         this.container.style.display = 'block'
         try {
-            const res = await fetch(`/diferentes_acciones`)
+            const res = await fetch(`diferentes_acciones`)
             console.log('Fetch response:', res.status)
             if (!res.ok) {
                 throw new Error(`HTTP ${res.status}`)
@@ -513,7 +513,7 @@ export class Backup {
         this.button.disabled = true
         this.button.textContent = 'Backing up...'
         try {
-            const res = await fetch('/backup', { method: 'POST' })
+            const res = await fetch('backup', { method: 'POST' })
             if (res.ok) {
                 alert('Backup completed successfully!')
                 await this.updateLastBackupDisplay()
@@ -531,7 +531,7 @@ export class Backup {
     async updateLastBackupDisplay() {
         if (!this.lastBackupEl) return
         try {
-            const res = await fetch('/backup/last')
+            const res = await fetch('backup/last')
             if (res.ok) {
                 const data = await res.json()
                 if (data.last_backup) {
