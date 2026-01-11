@@ -35,7 +35,7 @@ describe('DiferentesAcciones Integration Tests', () => {
 
       await diferentesAcciones.init()
 
-      expect(global.fetch).toHaveBeenCalledWith('/diferentes_acciones')
+      expect(global.fetch).toHaveBeenCalledWith('diferentes_acciones')
       expect(diferentesAcciones.data).toEqual(diferentesAccionesResponse)
     })
   })

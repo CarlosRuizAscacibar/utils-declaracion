@@ -15,19 +15,11 @@
         <div>
             <a href="#" data-navigate="diferentes_acciones">View Stocks</a>
         </div>
-        <div style="display: none;">
-            <button id="backup-button">Backup Data</button>
-            <p id="last-backup-info"></p>
-        </div>
         <h2><a href="#" data-navigate="year_report" data-year="2025">2025 Report</a></h2>
 
-        <section>
-            <h3>Database Backup</h3>
-            <div style="display: none;">
-                <button id="backup-button">Backup Data</button>
-                <p id="last-backup-info"></p>
-            </div>
-        </section>
+        <div>
+            <a href="#" data-navigate="backup_screen">Database Backup</a>
+        </div>
         <p><a href="#" data-navigate="home">← Back to home</a></p>
     </div>
 
@@ -35,6 +27,15 @@
         <h1>Acciones en cartera</h1>
         <div>
             <ul id="acciones-list"></ul>
+        </div>
+        <p><a href="#" data-navigate="home">← Back to home</a></p>
+    </div>
+
+    <div data-screen="backup_screen" style="display: none;">
+        <h1>Database Backup</h1>
+        <div>
+            <button id="backup-button">Backup Data</button>
+            <p id="last-backup-info"></p>
         </div>
         <p><a href="#" data-navigate="home">← Back to home</a></p>
     </div>

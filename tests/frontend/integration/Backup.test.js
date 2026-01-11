@@ -55,7 +55,7 @@ describe('Backup Integration Tests', () => {
 
       await new Promise(resolve => setTimeout(resolve, 0)) // Wait for async
 
-      expect(global.fetch).toHaveBeenCalledWith('/backup', { method: 'POST' })
+      expect(global.fetch).toHaveBeenCalledWith('backup', { method: 'POST' })
       expect(backup.button.disabled).toBe(false)
       expect(backup.button.textContent).toBe('Backup Data')
     })

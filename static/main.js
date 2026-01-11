@@ -485,7 +485,21 @@ export class Home {
             return
         }
         this.container.style.display = 'block'
-        // Show backup after loading
+    }
+}
+
+export class BackupScreen {
+    constructor() {
+        this.screenName = 'backup_screen'
+    }
+
+    async init() {
+        this.container = document.querySelector(`[data-screen="${this.screenName}"]`)
+        if (!this.container) {
+            console.error(`Container for ${this.screenName} not found`)
+            return
+        }
+        this.container.style.display = 'block'
         const backup = new Backup()
         await backup.init()
     }
@@ -493,12 +507,13 @@ export class Home {
 
 export class Backup {
     constructor() {
-        this.button = document.getElementById('backup-button')
-        this.lastBackupEl = document.getElementById('last-backup-info')
-        this.container = this.button ? this.button.parentElement : null
     }
 
     async init() {
+        this.button = document.getElementById('backup-button')
+        this.lastBackupEl = document.getElementById('last-backup-info')
+        this.container = this.button ? this.button.parentElement : null
+
         if (this.button) {
             this.button.addEventListener('click', () => this.performBackup())
         }
@@ -554,6 +569,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const home = new Home()
     app.registerScreen('home', home)
+
+    const backupScreen = new BackupScreen()
+    app.registerScreen('backup_screen', backupScreen)
 
     const diferentesAcciones = new DiferentesAcciones()
     app.registerScreen('diferentes_acciones', diferentesAcciones)
