@@ -8,26 +8,28 @@ describe('Backup Integration Tests', () => {
   let lastBackupEl
 
   beforeEach(() => {
+    const backupDiv = document.createElement('div')
+    backupDiv.style.display = 'none'
     button = document.createElement('button')
     button.id = 'backup-button'
-    document.body.appendChild(button)
+    backupDiv.appendChild(button)
 
     lastBackupEl = document.createElement('p')
     lastBackupEl.id = 'last-backup-info'
-    document.body.appendChild(lastBackupEl)
+    backupDiv.appendChild(lastBackupEl)
+
+    document.body.appendChild(backupDiv)
+
+    vi.spyOn(window, 'alert').mockImplementation(() => {})
 
     backup = new Backup()
     backup.init()
   })
 
   afterEach(() => {
-    const btn = document.getElementById('backup-button')
-    if (btn) {
-      btn.remove()
-    }
-    const info = document.getElementById('last-backup-info')
-    if (info) {
-      info.remove()
+    const backupDiv = document.querySelector('#backup-button')?.parentElement
+    if (backupDiv) {
+      backupDiv.remove()
     }
     vi.restoreAllMocks()
   })

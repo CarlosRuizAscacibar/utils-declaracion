@@ -458,6 +458,7 @@ export class Backup {
     constructor() {
         this.button = document.getElementById('backup-button')
         this.lastBackupEl = document.getElementById('last-backup-info')
+        this.container = this.button ? this.button.parentElement : null
     }
 
     async init() {
@@ -465,6 +466,9 @@ export class Backup {
             this.button.addEventListener('click', () => this.performBackup())
         }
         await this.updateLastBackupDisplay()
+        if (this.container) {
+            this.container.style.display = 'block'
+        }
     }
 
     async performBackup() {

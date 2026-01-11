@@ -4,22 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acciones en cartera</title>
+    <title>Stock Portfolio Manager</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
-    <h1>Acciones en cartera</h1>
-
     <div data-screen="home" style="display: block;">
+        <h1>Acciones en cartera</h1>
+
+        <div style="display: none;">
+            <button id="backup-button">Backup Data</button>
+            <p id="last-backup-info"></p>
+        </div>
+
         <h2><a href="#" data-navigate="year_report" data-year="2025">2025 Report</a></h2>
         <div>
             <ul id="acciones-list"></ul>
         </div>
-        <div>
-            <button id="backup-button">Backup Data</button>
-            <p id="last-backup-info"></p>
-        </div>
+    </div>
     </div>
 
     <div data-screen="cartera_accion" class="cartera" style="display: none;">
@@ -91,32 +93,39 @@
         <div class="year-content" style="display: none;">
             <section class="content">
                 <h1 class="year-title"></h1>
-                <table class="c-table" border="1">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Compra Fecha</th>
-                            <th>Precio Unitario Compra</th>
-                            <th>Venta Fecha</th>
-                            <th>Precio Unitario Venta</th>
-                            <th>Beneficio €</th>
-                        </tr>
-                    </thead>
-                    <tbody class="compra-ventas-tbody">
-                    </tbody>
-                </table>
 
-                <table class="c-table" border="1">
-                    <thead>
-                        <tr>
-                            <th>Concepto</th>
-                            <th>Fecha</th>
-                            <th>Importe €</th>
-                        </tr>
-                    </thead>
-                    <tbody class="dividendos-tbody">
-                    </tbody>
-                </table>
+                <section>
+                    <h3>Compra y Ventas Asociadas</h3>
+                    <table class="c-table" border="1">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Compra Fecha</th>
+                                <th>Precio Unitario Compra</th>
+                                <th>Venta Fecha</th>
+                                <th>Precio Unitario Venta</th>
+                                <th>Beneficio €</th>
+                            </tr>
+                        </thead>
+                        <tbody class="compra-ventas-tbody">
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Dividendos</h3>
+                    <table class="c-table" border="1">
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Fecha</th>
+                                <th>Importe €</th>
+                            </tr>
+                        </thead>
+                        <tbody class="dividendos-tbody">
+                        </tbody>
+                    </table>
+                </section>
             </section>
         </div>
         <p><a href="#" data-navigate="home">← Back to stocks</a></p>

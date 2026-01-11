@@ -66,11 +66,11 @@ describe('Application Integration Tests', () => {
       expect(mockScreen.init).not.toHaveBeenCalled()
     })
 
-    it('should handle no_screen as default', () => {
+    it('should handle home as default', () => {
       mockURL({})
       app.init()
 
-      expect(app.currentScreen).toBe('no_screen')
+      expect(app.currentScreen).toBe('home')
     })
   })
 
@@ -82,11 +82,11 @@ describe('Application Integration Tests', () => {
       expect(app.currentScreen).toBe('cartera_accion')
     })
 
-    it('should use no_screen when no selected_screen parameter', () => {
+    it('should use home when no selected_screen parameter', () => {
       mockURL({})
       app.init()
 
-      expect(app.currentScreen).toBe('no_screen')
+      expect(app.currentScreen).toBe('home')
     })
 
     it('should update screen on popstate event', () => {

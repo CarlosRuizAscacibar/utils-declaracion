@@ -8,17 +8,20 @@ describe('DiferentesAcciones Integration Tests', () => {
   let container
 
   beforeEach(() => {
-    container = document.createElement('ul')
-    container.id = 'acciones-list'
+    container = document.createElement('div')
+    container.setAttribute('data-screen', 'home')
+    const list = document.createElement('ul')
+    list.id = 'acciones-list'
+    container.appendChild(list)
     document.body.appendChild(container)
 
     diferentesAcciones = new DiferentesAcciones()
   })
 
   afterEach(() => {
-    const list = document.getElementById('acciones-list')
-    if (list) {
-      list.remove()
+    const homeDiv = document.querySelector('[data-screen="home"]')
+    if (homeDiv) {
+      homeDiv.remove()
     }
   })
 
@@ -80,13 +83,14 @@ describe('DiferentesAcciones Integration Tests', () => {
     })
 
     it('should clear previous content before rendering', async () => {
-      container.innerHTML = '<li>Old content</li>'
+      const list = container.querySelector('#acciones-list')
+      list.innerHTML = '<li>Old content</li>'
 
       mockFetchSuccess('/diferentes_acciones', diferentesAccionesResponse)
 
       await diferentesAcciones.init()
 
-      expect(container.querySelector('li').textContent).not.toBe('Old content')
+      expect(list.querySelector('li').textContent).not.toBe('Old content')
     })
   })
 

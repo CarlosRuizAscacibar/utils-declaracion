@@ -63,11 +63,128 @@
   color: #666
 }
 
+/* home screen */
+#acciones-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+#acciones-list li {
+  margin-bottom: .5rem;
+}
+
+#acciones-list a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  padding: .75rem 1rem;
+  background: #fff;
+  border-radius: 4px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+#acciones-list a:hover {
+  background: #f9f9f9;
+  border-color: #ccc;
+}
+
+#backup-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: .5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s;
+}
+
+#backup-button:hover {
+  background: #0056b3;
+}
+
+#last-backup-info {
+  margin: .5rem 0 1rem;
+  font-size: 12px;
+  color: #666;
+}
+
 
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: system-ui, sans-serif;
   padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: #111;
+}
+
+/* year report link */
+h2 a {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  padding: .5rem 1rem;
+  background: #fff;
+  border-radius: 4px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+h2 a:hover {
+  background: #f9f9f9;
+  border-color: #ccc;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: #111;
+}
+
+/* year report link */
+h2 a {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  padding: .5rem 1rem;
+  background: #fff;
+  border-radius: 4px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+h2 a:hover {
+  background: #f9f9f9;
+  border-color: #ccc;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  color: #111;
+}
+
+/* year report link */
+h2 a {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  padding: .5rem 1rem;
+  background: #fff;
+  border-radius: 4px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+h2 a:hover {
+  background: #f9f9f9;
+  border-color: #ccc;
 }
 
 table {
