@@ -8,7 +8,7 @@ from enum import Enum
 from pydantic import BaseModel
 from loader import split_loader
 from modelos import constants
-from servicios import compraventas_por_isin, operations_from_db, year_report_srv
+from servicios import compraventas_por_isin, operations_from_db, year_report_srv, backup_service
 from servicios.eur_usd import fetch_all_conv
 app = Flask(__name__, static_folder='static')
 import dotenv
@@ -54,6 +54,15 @@ def year_report(year):
 @app.route("/diferentes_acciones", methods=["GET"])
 def diferentes_acciones():
     return jsonify(operations_from_db.stocks_in_account())
+
+@app.route("/backup", methods=["POST"])
+def backup_database():
+    success, message, path = backup_service.create_database_backup()
+
+    if success:
+        return jsonify({"message": message, "path": path})
+    else:
+        return jsonify({"error": message}), 500
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
