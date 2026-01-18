@@ -74,7 +74,8 @@ tests/
 │   │   ├── CarteraScreen.test.js
 │   │   ├── YearReport.test.js
 │   │   ├── DiferentesAcciones.test.js
-│   │   └── Backup.test.js
+│   │   ├── Backup.test.js
+│   │   └── InvestorData.test.js
 │   ├── e2e/                 # E2E tests (Playwright)
 │   │   └── frontend.spec.js
 │   ├── fixtures/             # Mock data and HTML
@@ -144,6 +145,7 @@ npm run test:all
 - **YearReport**: Year report rendering, table displays, empty data handling
 - **DiferentesAcciones**: Stock list rendering, link generation, error handling
 - **Backup**: Backup functionality, last backup display, API error handling
+- **InvestorData**: MyInvestor data retrieval, form validation, credential handling, API error handling
 
 #### E2E Tests
 

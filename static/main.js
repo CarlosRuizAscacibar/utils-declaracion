@@ -554,6 +554,74 @@ export class LoadFilesScreen {
     }
 }
 
+export class InvestorDataScreen {
+    constructor() {
+        this.screenName = 'investor_data_screen'
+    }
+
+    async init() {
+        this.container = document.querySelector(`[data-screen="${this.screenName}"]`)
+        if (!this.container) {
+            console.error(`Container for ${this.screenName} not found`)
+            return
+        }
+        this.container.style.display = 'block'
+        this.form = this.container.querySelector('#investor-data-form')
+        this.button = this.container.querySelector('#get-investor-data-button')
+        this.status = this.container.querySelector('#investor-data-status')
+        this.output = this.container.querySelector('#investor-data-output')
+        if (this.form) {
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e))
+        }
+    }
+
+    async handleSubmit(e) {
+        e.preventDefault()
+        if (this.button.disabled) return
+
+        const formData = new FormData(this.form)
+        const username = formData.get('username')
+        const password = formData.get('password')
+
+        if (!username || !password) {
+            alert('Please fill in both username and password')
+            return
+        }
+
+        this.button.disabled = true
+        this.button.textContent = 'Getting data...'
+        this.status.textContent = 'Retrieving MyInvestor data...'
+        this.output.textContent = ''
+
+        try {
+            const res = await fetch('get_investor_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            const data = await res.json()
+            if (res.ok) {
+                this.status.textContent = 'MyInvestor data retrieved successfully!'
+                this.output.textContent = data.output
+                alert('MyInvestor data retrieved successfully!')
+            } else {
+                this.status.textContent = 'Error retrieving MyInvestor data.'
+                this.output.textContent = data.error
+                alert('Error retrieving MyInvestor data: ' + data.error)
+            }
+        } catch (e) {
+            this.status.textContent = 'Network error.'
+            this.output.textContent = e.message
+            alert('Error: ' + e.message)
+        } finally {
+            this.button.disabled = false
+            this.button.textContent = 'Get Investor Data'
+        }
+    }
+}
+
 export class Backup {
     constructor() {
     }
@@ -624,6 +692,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadFilesScreen = new LoadFilesScreen()
     app.registerScreen('load_files_screen', loadFilesScreen)
+
+    const investorDataScreen = new InvestorDataScreen()
+    app.registerScreen('investor_data_screen', investorDataScreen)
 
     const diferentesAcciones = new DiferentesAcciones()
     app.registerScreen('diferentes_acciones', diferentesAcciones)

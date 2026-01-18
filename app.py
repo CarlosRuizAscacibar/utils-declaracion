@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import math
 import subprocess
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, request
 import os
 from flask.json.provider import DefaultJSONProvider
 from enum import Enum
@@ -81,6 +81,51 @@ def load_files():
             return jsonify({"message": "Files loaded successfully", "output": result.stdout})
         else:
             return jsonify({"error": result.stderr}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get_investor_data", methods=["POST"])
+def get_investor_data():
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return jsonify({"error": "Username and password are required"}), 400
+
+        # Run orders script with credentials as arguments
+        orders_result = subprocess.run(
+            ["python", "get_my_investor_orders.py", "--username", username, "--password", password],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
+
+        # Run movements script with credentials as arguments
+        movements_result = subprocess.run(
+            ["python", "get_my_investor_movements.py", "--username", username, "--password", password],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
+
+        output = ""
+        if orders_result.returncode == 0:
+            output += "Orders: " + orders_result.stdout + "\n"
+        else:
+            output += "Orders error: " + orders_result.stderr + "\n"
+
+        if movements_result.returncode == 0:
+            output += "Movements: " + movements_result.stdout + "\n"
+        else:
+            output += "Movements error: " + movements_result.stderr + "\n"
+
+        if orders_result.returncode == 0 and movements_result.returncode == 0:
+            return jsonify({"message": "MyInvestor data retrieved successfully", "output": output})
+        else:
+            return jsonify({"error": output}), 500
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

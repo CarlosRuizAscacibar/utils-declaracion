@@ -151,6 +151,69 @@
   overflow-y: auto;
 }
 
+#investor-data-form {
+  margin-bottom: 1rem;
+}
+
+#investor-data-form div {
+  margin-bottom: 1rem;
+}
+
+#investor-data-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+#investor-data-form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+#get-investor-data-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: .5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s;
+}
+
+#get-investor-data-button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+#get-investor-data-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+#investor-data-status {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+#investor-data-output {
+  margin-top: 0.5rem;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 #last-backup-info {
   margin: .5rem 0 1rem;
   font-size: 12px;

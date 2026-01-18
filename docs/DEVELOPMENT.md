@@ -1,5 +1,7 @@
 # Development Guide
 
+See [CHANGELOG.md](../CHANGELOG.md) for recent changes and version history.
+
 ## Project Structure
 
 ```
@@ -16,7 +18,8 @@
 │   └── style.css           # Stylesheets
 ├── tests/                   # Test suite
 │   ├── servicios/          # Backend tests
-│   └── frontend/           # Frontend tests
+│   ├── frontend/           # Frontend tests
+│   └── test_app.py         # Flask application tests
 └── requirements.txt         # Python dependencies
 ```
 
@@ -29,6 +32,9 @@ python -m unittest discover tests/
 
 # Run specific test
 python -m unittest tests.servicios.test_backup_service
+
+# Run Flask application tests
+python -m unittest tests.test_app
 ```
 
 ### Frontend Tests

@@ -24,6 +24,8 @@ test.describe('Frontend E2E Tests', () => {
       const loadFilesLink = page.locator('a[data-navigate="load_files_screen"]')
       await expect(loadFilesLink).toBeVisible()
       await expect(loadFilesLink).toContainText('Load Files')
+      const investorDataLink = page.locator('a[data-navigate="investor_data_screen"]')
+      await expect(investorDataLink).toContainText('Get MyInvestor Data')
     })
   })
 
@@ -63,6 +65,74 @@ test.describe('Frontend E2E Tests', () => {
 
       const homeScreen = page.locator('[data-screen="home"]')
       await expect(homeScreen).toBeVisible()
+    })
+  })
+
+  test.describe('Investor Data Screen', () => {
+    test('should navigate to investor data screen', async ({ page }) => {
+      const investorDataLink = page.locator('a[data-navigate="investor_data_screen"]')
+      await investorDataLink.click()
+
+      const investorDataScreen = page.locator('[data-screen="investor_data_screen"]')
+      await expect(investorDataScreen).toBeVisible()
+    })
+
+    test('should display investor data screen elements', async ({ page }) => {
+      const investorDataLink = page.locator('a[data-navigate="investor_data_screen"]')
+      await investorDataLink.click()
+
+      await expect(page.locator('h1')).toContainText('Get MyInvestor Data')
+      await expect(page.locator('#investor-data-form')).toBeVisible()
+      await expect(page.locator('input[name="username"]')).toBeVisible()
+      await expect(page.locator('input[name="password"]')).toBeVisible()
+      await expect(page.locator('#get-investor-data-button')).toBeVisible()
+      await expect(page.locator('#investor-data-status')).toBeVisible()
+      await expect(page.locator('#investor-data-output')).toBeVisible()
+    })
+
+    test('should have back to home link', async ({ page }) => {
+      const investorDataLink = page.locator('a[data-navigate="investor_data_screen"]')
+      await investorDataLink.click()
+
+      const backLink = page.locator('[data-screen="investor_data_screen"] a[data-navigate="home"]')
+      await expect(backLink).toContainText('← Back to home')
+    })
+
+    test('should navigate back to home', async ({ page }) => {
+      const investorDataLink = page.locator('a[data-navigate="investor_data_screen"]')
+      await investorDataLink.click()
+
+      const backLink = page.locator('[data-screen="investor_data_screen"] a[data-navigate="home"]')
+      await backLink.click()
+
+      const homeScreen = page.locator('[data-screen="home"]')
+      await expect(homeScreen).toBeVisible()
+    })
+
+    test('should validate form inputs', async ({ page }) => {
+      const investorDataLink = page.locator('a[data-navigate="investor_data_screen"]')
+      await investorDataLink.click()
+
+      // Try to submit empty form
+      await page.locator('#get-investor-data-button').click()
+
+      // Should show alert (we can't test alert content in e2e, but form should prevent submission)
+      // The form should remain visible
+      await expect(page.locator('#investor-data-form')).toBeVisible()
+    })
+
+    test('should have proper form attributes', async ({ page }) => {
+      const investorDataLink = page.locator('a[data-navigate="investor_data_screen"]')
+      await investorDataLink.click()
+
+      const usernameInput = page.locator('input[name="username"]')
+      const passwordInput = page.locator('input[name="password"]')
+
+      await expect(usernameInput).toHaveAttribute('type', 'text')
+      await expect(usernameInput).toHaveAttribute('required')
+
+      await expect(passwordInput).toHaveAttribute('type', 'password')
+      await expect(passwordInput).toHaveAttribute('required')
     })
   })
 

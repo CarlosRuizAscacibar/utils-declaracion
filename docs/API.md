@@ -90,3 +90,39 @@ POST /backup
   "path": "./backups/backup_20240111.db"
 }
 ```
+
+## Data Import
+
+### Load All Files
+```http
+POST /load_files
+```
+
+**Response:**
+```json
+{
+  "message": "Files loaded successfully",
+  "output": "Loading output..."
+}
+```
+
+### Get MyInvestor Data
+```http
+POST /get_investor_data
+```
+
+**Request Body:**
+```json
+{
+  "username": "your_myinvestor_username",
+  "password": "your_myinvestor_password"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "MyInvestor data retrieved successfully",
+  "output": "Orders: success\nMovements: success"
+}
+```

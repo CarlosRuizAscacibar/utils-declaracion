@@ -63,6 +63,7 @@ A web application for managing and tracking stock portfolio data with support fo
 
 The application supports importing data from various sources:
 
+#### Manual Import Scripts
 ```bash
 # Import stock operations
 python loader/persistir_ops.py
@@ -75,6 +76,36 @@ python loader/broker_myinvestor.py
 python loader/evo.py
 ```
 
+#### Automated Data Retrieval
+The web interface provides automated data retrieval from supported brokers:
+
+- **Load Files**: Process all configured data files automatically
+- **Get MyInvestor Data**: Retrieve orders and bank movements from MyInvestor platform using your credentials
+
+To use MyInvestor data retrieval:
+1. Navigate to "Get MyInvestor Data" in the web interface
+2. Enter your MyInvestor username and password
+3. Click "Get MyInvestor Data" to retrieve and import your data automatically
+
+## Recent Changes
+
+### v1.1.0 - MyInvestor Data Integration
+- **New Feature**: Added MyInvestor data retrieval screen
+  - Secure credential input for MyInvestor platform
+  - Automated retrieval of orders and bank movements
+  - Integrated with existing data processing pipeline
+- **API Enhancement**: New `/get_investor_data` endpoint
+  - Accepts username/password credentials
+  - Runs both orders and movements retrieval scripts
+  - Returns combined status and output
+- **Frontend Updates**:
+  - New investor data screen with form validation
+  - Enhanced UI with loading states and error handling
+  - Comprehensive test coverage (unit and e2e tests)
+- **Backend Improvements**:
+  - Modified MyInvestor scripts to accept command-line credentials
+  - Enhanced error handling and status reporting
+
 ## Documentation
 
 - [API Reference](docs/API.md)
@@ -82,6 +113,7 @@ python loader/evo.py
 - [Development Guide](docs/DEVELOPMENT.md)
 - [Configuration](docs/CONFIGURATION.md)
 - [Frontend Documentation](docs/FRONTEND.md)
+- [Changelog](CHANGELOG.md)
 
 ## Contributing
 
