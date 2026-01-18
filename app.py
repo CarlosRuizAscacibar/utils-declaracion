@@ -1,5 +1,6 @@
 from datetime import date, datetime
 import math
+import subprocess
 from flask import Flask, jsonify, send_from_directory
 import os
 from flask.json.provider import DefaultJSONProvider
@@ -71,6 +72,17 @@ def get_last_backup():
         return jsonify({"last_backup": last_backup})
     else:
         return jsonify({"last_backup": None}), 404
+
+@app.route("/load_files", methods=["POST"])
+def load_files():
+    try:
+        result = subprocess.run(["python", "load_all_files.py"], capture_output=True, text=True, cwd=os.getcwd())
+        if result.returncode == 0:
+            return jsonify({"message": "Files loaded successfully", "output": result.stdout})
+        else:
+            return jsonify({"error": result.stderr}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/static/<path:filename>')
 def static_files(filename):

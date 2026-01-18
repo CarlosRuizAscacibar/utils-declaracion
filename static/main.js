@@ -505,6 +505,55 @@ export class BackupScreen {
     }
 }
 
+export class LoadFilesScreen {
+    constructor() {
+        this.screenName = 'load_files_screen'
+    }
+
+    async init() {
+        this.container = document.querySelector(`[data-screen="${this.screenName}"]`)
+        if (!this.container) {
+            console.error(`Container for ${this.screenName} not found`)
+            return
+        }
+        this.container.style.display = 'block'
+        this.button = this.container.querySelector('#load-files-button')
+        this.status = this.container.querySelector('#load-files-status')
+        this.output = this.container.querySelector('#load-files-output')
+        if (this.button) {
+            this.button.addEventListener('click', () => this.loadFiles())
+        }
+    }
+
+    async loadFiles() {
+        if (this.button.disabled) return
+        this.button.disabled = true
+        this.button.textContent = 'Loading...'
+        this.status.textContent = 'Executing load_all_files.py...'
+        this.output.textContent = ''
+        try {
+            const res = await fetch('load_files', { method: 'POST' })
+            const data = await res.json()
+            if (res.ok) {
+                this.status.textContent = 'Files loaded successfully!'
+                this.output.textContent = data.output
+                alert('Files loaded successfully!')
+            } else {
+                this.status.textContent = 'Error loading files.'
+                this.output.textContent = data.error
+                alert('Error loading files: ' + data.error)
+            }
+        } catch (e) {
+            this.status.textContent = 'Network error.'
+            this.output.textContent = e.message
+            alert('Error: ' + e.message)
+        } finally {
+            this.button.disabled = false
+            this.button.textContent = 'Load All Files'
+        }
+    }
+}
+
 export class Backup {
     constructor() {
     }
@@ -572,6 +621,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const backupScreen = new BackupScreen()
     app.registerScreen('backup_screen', backupScreen)
+
+    const loadFilesScreen = new LoadFilesScreen()
+    app.registerScreen('load_files_screen', loadFilesScreen)
 
     const diferentesAcciones = new DiferentesAcciones()
     app.registerScreen('diferentes_acciones', diferentesAcciones)

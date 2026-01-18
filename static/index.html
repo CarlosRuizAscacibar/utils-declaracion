@@ -19,6 +19,7 @@
 
         <div>
             <a href="#" data-navigate="backup_screen">Database Backup</a>
+            <a href="#" data-navigate="load_files_screen">Load Files</a>
         </div>
         <p><a href="#" data-navigate="home">← Back to home</a></p>
     </div>
@@ -36,6 +37,16 @@
         <div>
             <button id="backup-button">Backup Data</button>
             <p id="last-backup-info"></p>
+        </div>
+        <p><a href="#" data-navigate="home">← Back to home</a></p>
+    </div>
+
+    <div data-screen="load_files_screen" style="display: none;">
+        <h1>Load All Files</h1>
+        <div>
+            <button id="load-files-button">Load All Files</button>
+            <div id="load-files-status"></div>
+            <pre id="load-files-output"></pre>
         </div>
         <p><a href="#" data-navigate="home">← Back to home</a></p>
     </div>

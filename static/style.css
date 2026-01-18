@@ -111,6 +111,46 @@
   cursor: not-allowed;
 }
 
+#load-files-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: .5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s;
+}
+
+#load-files-button:hover:not(:disabled) {
+  background: #1e7e34;
+}
+
+#load-files-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+#load-files-status {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+#load-files-output {
+  margin-top: 0.5rem;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 #last-backup-info {
   margin: .5rem 0 1rem;
   font-size: 12px;

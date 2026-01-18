@@ -19,6 +19,51 @@ test.describe('Frontend E2E Tests', () => {
       const yearLink = page.locator('h2 a')
       await expect(yearLink).toHaveAttribute('href', '/static/cartera_isin.html?year=2025&selected_screen=year_report')
     })
+
+    test('should have load files navigation link', async ({ page }) => {
+      const loadFilesLink = page.locator('a[data-navigate="load_files_screen"]')
+      await expect(loadFilesLink).toBeVisible()
+      await expect(loadFilesLink).toContainText('Load Files')
+    })
+  })
+
+  test.describe('Load Files Screen', () => {
+    test('should navigate to load files screen', async ({ page }) => {
+      const loadFilesLink = page.locator('a[data-navigate="load_files_screen"]')
+      await loadFilesLink.click()
+
+      const loadFilesScreen = page.locator('[data-screen="load_files_screen"]')
+      await expect(loadFilesScreen).toBeVisible()
+    })
+
+    test('should display load files screen elements', async ({ page }) => {
+      const loadFilesLink = page.locator('a[data-navigate="load_files_screen"]')
+      await loadFilesLink.click()
+
+      await expect(page.locator('h1')).toContainText('Load All Files')
+      await expect(page.locator('#load-files-button')).toBeVisible()
+      await expect(page.locator('#load-files-status')).toBeVisible()
+      await expect(page.locator('#load-files-output')).toBeVisible()
+    })
+
+    test('should have back to home link', async ({ page }) => {
+      const loadFilesLink = page.locator('a[data-navigate="load_files_screen"]')
+      await loadFilesLink.click()
+
+      const backLink = page.locator('[data-screen="load_files_screen"] a[data-navigate="home"]')
+      await expect(backLink).toContainText('← Back to home')
+    })
+
+    test('should navigate back to home', async ({ page }) => {
+      const loadFilesLink = page.locator('a[data-navigate="load_files_screen"]')
+      await loadFilesLink.click()
+
+      const backLink = page.locator('[data-screen="load_files_screen"] a[data-navigate="home"]')
+      await backLink.click()
+
+      const homeScreen = page.locator('[data-screen="home"]')
+      await expect(homeScreen).toBeVisible()
+    })
   })
 
   test.describe('Stock Navigation', () => {
